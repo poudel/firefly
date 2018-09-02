@@ -1,12 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="pa2 mv-2 f6">
+        <a class="link dark-blue" href="">older-entries</a>
+    </div>
     <div class="pa2">
         {% for link in links %}
-            <div>
-                <span class="light-green">RL</span>
+            <div class="mb3">
+                <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>
+                    {{ link.title }}
+                </a> <span class="black-30 f7">({{ link.domain }})</span>
 
-                <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.title }}</a>
+                {% if link.description %}
+                <div class="mt1 f6 black-60">
+                    {{ link.description }}
+                </div>
+                {% endif %}
+
+                {% if link.tags %}
+                <div class="mt1">
+                    {% for tag in link.tags %}
+                        <span class="mr1 f6">
+                            <a class="dark-green link underline-hover" href="">{{ tag }}</a>
+                        </span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mt1 f7">
+                    <span class="mr2 black-40">2 hours ago</span>
+                    <a class="link black-40 underline-hover" href="">edit</a>
+                    <a class="ml2 link black-40 underline-hover" href="">delete</a>
+                </div>
             </div>
         {% endfor %}
     </div>
