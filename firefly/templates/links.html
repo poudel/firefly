@@ -6,20 +6,32 @@
     </div>
     <div class="pa2">
         {% for link in links %}
-            <div class="mb3">
+            <div class="mb4">
                 <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if config.open_new_tab %}target="_blank"{% endif %}>
                     {{ link.title }}
                 </a>
-                {% if config.show_target_link %}
-                    <div class="f7 black-50">
-                        {{ link.url }}
-                    </div>
-                {% elif config.show_target_domain %}
+
+                {% if config.show_target_domain %}
                     <span class="black-30 f7">({{ link.domain }})</span>
                 {% endif %}
 
+                {% if config.show_target_link %}
+                    <div class="f7">
+                        {% if config.make_target_link_clickable %}
+                            <a class="link underline-hover purple"
+                               href="{{ link.url }}"
+                               {% if config.open_new_tab %}target="_blank"{% endif %}>
+                                {{ link.url }}
+                            </a>
+                        {% else %}
+                            <span class="black-50"{{ link.url }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+
                 {% if link.description %}
-                <div class="mt1 f6 black-70">
+                <div class="mt1 f6 dark-gray">
                     {{ link.description }}
                 </div>
                 {% endif %}
