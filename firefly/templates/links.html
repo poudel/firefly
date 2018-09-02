@@ -7,12 +7,19 @@
     <div class="pa2">
         {% for link in links %}
             <div class="mb3">
-                <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>
+                <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if config.open_new_tab %}target="_blank"{% endif %}>
                     {{ link.title }}
-                </a> <span class="black-30 f7">({{ link.domain }})</span>
+                </a>
+                {% if config.show_target_link %}
+                    <div class="f7 black-50">
+                        {{ link.url }}
+                    </div>
+                {% elif config.show_target_domain %}
+                    <span class="black-30 f7">({{ link.domain }})</span>
+                {% endif %}
 
                 {% if link.description %}
-                <div class="mt1 f6 black-60">
+                <div class="mt1 f6 black-70">
                     {{ link.description }}
                 </div>
                 {% endif %}
@@ -31,6 +38,9 @@
                     <span class="mr2 black-40">2 hours ago</span>
                     <a class="link black-40 underline-hover" href="">edit</a>
                     <a class="ml2 link black-40 underline-hover" href="">delete</a>
+                    {% if config.show_copy_link %}
+                        <a class="ml2 link black-40 underline-hover" href="">copy</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

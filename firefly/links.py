@@ -4,12 +4,6 @@ from flask import Blueprint, render_template
 bp = Blueprint("links", __name__, url_prefix="/links")
 
 
-def update_defaults(l):
-    link = {"new_tab": True}
-    link.update(l)
-    return link
-
-
 @bp.route("/")
 def links():
 
@@ -37,7 +31,6 @@ def links():
             "url": "https://google.com",
             "domain": "google.com",
             "title": "Google",
-            "new_tab": False,
             "tags": ["search"],
         },
         {
@@ -63,4 +56,10 @@ def links():
             ),
         },
     ]
-    return render_template("links.html", links=map(update_defaults, links))
+    config = {
+        "show_target_link": True,
+        "show_target_domain": True,
+        "open_new_tab": True,
+        "show_copy_link": True,
+    }
+    return render_template("links.html", links=links, config=config)
