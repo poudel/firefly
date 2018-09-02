@@ -6,8 +6,15 @@
         <title>Links</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ url_for('static', filename='tachyons.min.css') }}">
     </head>
-    <body>
+    <body class="sans-serif">
+        <!-- start navbar -->
+        <div class="bb pv1 ph2 b">
+            firefly
+        </div>
+        <!-- end navbar -->
+
         {% block content %}
         {% endblock %}
     </body>

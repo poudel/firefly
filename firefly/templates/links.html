@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>
+    <div class="pa2">
         {% for link in links %}
             <div>
-                <a href="{{ link.url }}">{{ link.title }}</a>
+                <span class="light-green">RL</span>
+
+                <a href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{ link.title }}</a>
             </div>
         {% endfor %}
     </div>
