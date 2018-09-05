@@ -11,18 +11,30 @@
     <body class="sans-serif">
         <!-- start navbar -->
         <div class="bb pv1 ph2 b">
-            firefly
+            Firefly
         </div>
         <!-- end navbar -->
 
         <div>
             <div class="fl w-10 pa2">
-                <a class="link navy underline-hover" href="">Home</a> <br>
-                <a class="link navy underline-hover" href="">Notes</a> <br>
-                <a class="link navy underline-hover" href="">Saved pages</a> <br>
-                <a class="link navy underline-hover" href="">Tools</a>
+                <div class="mt2">
+                    <input class="w-100" type="text" placeholder="search..." />
+                </div>
+
+                <div class="mt3">
+                    <ul class="list pl0">
+                        <li><a class="link navy underline-hover" href="">Home</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Watchlist</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Readlist</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Tools</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Extensions</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="fl w-70 pa2 br">
+            <div class="fl w-70 pa2 br bl b--light-gray">
             {% block content %}
             {% endblock %}
             </div>
