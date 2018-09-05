@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="pa2 mv-2 f6">
+    <div class="mv-2 f6">
         <a class="link dark-blue" href="">older-entries</a>
     </div>
-    <div class="pa2">
+    <div class="pv2">
         {% for link in links %}
             <div class="mb4">
                 <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if config.open_new_tab %}target="_blank"{% endif %}>
@@ -29,7 +29,6 @@
                     </div>
                 {% endif %}
 
-
                 {% if link.description %}
                 <div class="mt1 f6 dark-gray">
                     {{ link.description }}
@@ -48,11 +47,12 @@
 
                 <div class="mt1 f7">
                     <span class="mr2 black-40">2 hours ago</span>
-                    <a class="link black-40 underline-hover" href="">edit</a>
-                    <a class="ml2 link black-40 underline-hover" href="">delete</a>
+                    <a class="link black-40 underline-hover" href="{{ link._id  }}">edit</a>
+                    <a class="ml2 link black-40 underline-hover" href="{{ link._id }}">delete</a>
                     {% if config.show_copy_link %}
                         <a class="ml2 link black-40 underline-hover" href="">copy</a>
                     {% endif %}
+                    <a class="ml2 link black-40 underline-hover" href="">cached</a>
                 </div>
             </div>
         {% endfor %}

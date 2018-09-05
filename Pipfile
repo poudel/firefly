@@ -12,6 +12,8 @@ mongomock = "*"
 pytest = "*"
 pylint = "*"
 black = "*"
+ipython = "*"
+flask-shell-ipython = "*"
 
 [requires]
 python_version = "3.7"

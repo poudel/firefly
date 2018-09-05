@@ -15,7 +15,19 @@
         </div>
         <!-- end navbar -->
 
-        {% block content %}
-        {% endblock %}
+        <div>
+            <div class="fl w-10 pa2">
+                <a class="link navy underline-hover" href="">Home</a> <br>
+                <a class="link navy underline-hover" href="">Notes</a> <br>
+                <a class="link navy underline-hover" href="">Saved pages</a> <br>
+                <a class="link navy underline-hover" href="">Tools</a>
+            </div>
+            <div class="fl w-70 pa2 br">
+            {% block content %}
+            {% endblock %}
+            </div>
+            <div class="fl w-20 pa2">
+            </div>
+        </div>
     </body>
 </html>
