@@ -11,26 +11,30 @@
     <body class="sans-serif">
         <!-- start navbar -->
         <div class="bb pv1 ph2 b">
-            Firefly
+            <a class="link dark-blue" href="/">firefly</a>
         </div>
         <!-- end navbar -->
 
+        {% block content_wrapper %}
         <div>
             <div class="fl w-10 pa2">
                 <div class="mt2">
                     <input class="w-100" type="text" placeholder="search..." />
                 </div>
 
+                <!-- TODO: use a place to store shortcuts -->
+
                 <div class="mt3">
                     <ul class="list pl0">
                         <li><a class="link navy underline-hover" href="">Home</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Watchlist</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Readlist</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Tools</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Extensions</a></li>
+                        <li class="mt2"><a class="link navy underline-hover" href="">Documentation</a></li>
                     </ul>
                 </div>
             </div>
@@ -41,5 +45,6 @@
             <div class="fl w-20 pa2">
             </div>
         </div>
+        {% endblock %}
     </body>
 </html>

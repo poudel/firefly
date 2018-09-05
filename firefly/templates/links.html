@@ -18,7 +18,7 @@
                 {% if config.show_target_link %}
                     <div class="f7">
                         {% if config.make_target_link_clickable %}
-                            <a class="link underline-hover purple"
+                            <a class="link underline-hover dark-green"
                                href="{{ link.url }}"
                                {% if config.open_new_tab %}target="_blank"{% endif %}>
                                 {{ link.url }}
@@ -39,7 +39,7 @@
                 <div class="mt1">
                     {% for tag in link.tags %}
                         <span class="mr1 f6">
-                            <a class="dark-green link underline-hover" href="">{{ tag }}</a>
+                            <a class="dark-purple link underline-hover" href="">{{ tag }}</a>
                         </span>
                     {% endfor %}
                 </div>
