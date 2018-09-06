@@ -23,14 +23,16 @@
                 </div>
 
                 <!-- TODO: use a place to store shortcuts -->
-
                 <div class="mt3">
                     <ul class="list pl0">
-                        <li><a class="link navy underline-hover" href="">Home</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
+                        <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">Home</a></li>
+
+                        <!-- <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
+                             <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
+                             <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
+                             <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
+                        -->
+                        <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">Preferences</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Tools</a></li>
                         <li class="mt2"><a class="link navy underline-hover" href="">Extensions</a></li>

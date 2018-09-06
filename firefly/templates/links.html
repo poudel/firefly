@@ -24,7 +24,7 @@
                                 {{ link.url }}
                             </a>
                         {% else %}
-                            <span class="black-50"{{ link.url }}</span>
+                            <span class="dark-green">{{ link.url }}</span>
                         {% endif %}
                     </div>
                 {% endif %}
@@ -52,7 +52,9 @@
                     {% if config.show_copy_link %}
                         <a class="ml2 link black-40 underline-hover" href="">copy</a>
                     {% endif %}
-                    <a class="ml2 link black-40 underline-hover" href="">cached</a>
+                    {% if config.show_cached_link %}
+                        <a class="ml2 link black-40 underline-hover" href="">cached</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

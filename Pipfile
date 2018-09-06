@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask = "*"
 pymongo = "*"
+flask-wtf = "*"
 
 [dev-packages]
 mongomock = "*"
