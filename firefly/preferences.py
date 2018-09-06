@@ -32,7 +32,6 @@ class PreferenceForm(FlaskForm):
     archive_link_format = StringField(
         "Format for archive URL", default="https://archive.is/{url}"
     )
-    timezone = StringField("Your timezone", default="Asia/Kathmandu")
 
 
 def get_defaults():
