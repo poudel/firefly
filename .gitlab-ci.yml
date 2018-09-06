@@ -27,6 +27,7 @@ test:
   script:
   - pipenv run coverage run -m pytest
   - pipenv run coverage report -m
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
 #  - pip install tox flake8  # you can also use tox
 #  - tox -e py36,flake8
 
