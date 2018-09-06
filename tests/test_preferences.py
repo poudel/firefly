@@ -1,4 +1,5 @@
 import pytest
+from flask import url_for
 import firefly.preferences
 from firefly.preferences import (
     get_defaults,
@@ -6,6 +7,7 @@ from firefly.preferences import (
     create_defaults,
     update_defaults,
     update_preferences,
+    preferences as preferences_view,
 )
 from firefly.db import get_db
 
@@ -99,3 +101,8 @@ def test_update_preferences_updates_prefs_in_db(app):
 
     prefs = get_db().preferences.find()[0]
     assert prefs[key] == "JAJA"
+
+
+def test_preferences_view_get(client):
+    res = client.get("/preferences/")
+    assert res.status_code == 200
