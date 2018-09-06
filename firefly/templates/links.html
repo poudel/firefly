@@ -50,7 +50,11 @@
                     <a class="link black-40 underline-hover" href="{{ link._id  }}">edit</a>
                     <a class="ml2 link black-40 underline-hover" href="{{ link._id }}">delete</a>
                     {% if config.show_copy_link %}
-                        <a class="ml2 link black-40 underline-hover" href="">copy</a>
+                        <a class="ml2 link black-40 underline-hover copy-btn"
+                           title="Copy this link to the clipboard"
+                           href="javascript:;"
+                           data-clipboard-text="{{ link.url }}">copy</a>
+
                     {% endif %}
                     {% if config.show_cached_link %}
                         <a class="ml2 link black-40 underline-hover" href="">cached</a>
@@ -63,3 +67,10 @@
         {% endfor %}
     </div>
 {% endblock content %}
+
+{% block footer %}
+    <script src="{{ url_for('static', filename='clipboard.min.js') }}"></script>
+    <script>
+     new ClipboardJS(".copy-btn");
+    </script>
+{% endblock %}
