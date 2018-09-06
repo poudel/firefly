@@ -46,7 +46,7 @@
                 {% endif %}
 
                 <div class="mt1 f7">
-                    <span class="mr2 black-40">2 hours ago</span>
+                    <span title="{{ link.created_at }}" class="mr2 black-40">{{ link.naturaltime }}</span>
                     <a class="link black-40 underline-hover" href="{{ link._id  }}">edit</a>
                     <a class="ml2 link black-40 underline-hover" href="{{ link._id }}">delete</a>
                     {% if config.show_copy_link %}

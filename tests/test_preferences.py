@@ -12,7 +12,7 @@ from firefly.db import get_db
 
 def test_get_defaults():
     prefs = get_defaults()
-    assert len(prefs) == 8
+    assert len(prefs) == 9
     assert isinstance(prefs, dict)
 
 
