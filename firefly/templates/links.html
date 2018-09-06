@@ -39,7 +39,7 @@
                 <div class="mt1">
                     {% for tag in link.tags %}
                         <span class="mr1 f6">
-                            <a class="dark-purple link underline-hover" href="">{{ tag }}</a>
+                            <a class="dark-purple link underline-hover" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
                         </span>
                     {% endfor %}
                 </div>
