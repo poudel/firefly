@@ -1,5 +1,4 @@
 import pytest
-from flask import url_for
 import firefly.preferences
 from firefly.preferences import (
     get_defaults,
@@ -7,7 +6,6 @@ from firefly.preferences import (
     create_defaults,
     update_defaults,
     update_preferences,
-    preferences as preferences_view,
 )
 from firefly.db import get_db
 

@@ -15,6 +15,7 @@ pylint = "*"
 black = "*"
 ipython = "*"
 flask-shell-ipython = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"

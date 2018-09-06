@@ -25,7 +25,8 @@ before_script:
 
 test:
   script:
-  - pipenv run pytest
+  - pipenv run coverage run -m pytest
+  - pipenv run coverage report -m
 #  - pip install tox flake8  # you can also use tox
 #  - tox -e py36,flake8
 
