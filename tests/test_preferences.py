@@ -5,6 +5,7 @@ from firefly.preferences import (
     get_preferences,
     create_defaults,
     update_defaults,
+    update_preferences,
 )
 from firefly.db import get_db
 
@@ -82,3 +83,19 @@ def test_update_defaults_leaves_unchanged_keys_intact(app, monkeypatch):
     saved_config.pop("_id")
     assert len(saved_config) == len(defaults)
     assert len(set(saved_config).intersection(defaults)) == len(defaults)
+
+
+def test_update_preferences_ignores_unknown_keys(app):
+    update_preferences(asdfasdfasdf=True)
+    prefs = get_db().preferences.find()[0]
+    assert "asdfasdfasdf" not in prefs, "Should ignore unknown keys"
+
+
+def test_update_preferences_updates_prefs_in_db(app):
+    defaults = get_defaults()
+    key = list(defaults)[0]
+
+    update_preferences(**{key: "JAJA"})
+
+    prefs = get_db().preferences.find()[0]
+    assert prefs[key] == "JAJA"
