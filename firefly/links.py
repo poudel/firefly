@@ -33,5 +33,6 @@ def links_pre_render(links_queryset):
 @bp.route("/")
 @bp.route("/<tag>/")
 def links(tag=None):
-    context = {"links": get_links(tag=tag), "config": get_preferences()}
+    links_qs = links_pre_render(get_links(tag=tag))
+    context = {"links": links_qs, "config": get_preferences()}
     return render_template("links.html", **context)
