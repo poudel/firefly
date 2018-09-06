@@ -26,6 +26,9 @@ class PreferenceForm(FlaskForm):
     show_archived_link = BooleanField(
         "Show a link to archive sites such as archive.is", default=True
     )
+    show_created_time = BooleanField(
+        "Display created time in humanized form", default=True
+    )
     archive_link_format = StringField(
         "Format for archive URL", default="https://archive.is/{url}"
     )
