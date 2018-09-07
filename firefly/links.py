@@ -47,6 +47,34 @@ def links_create():
     return render_template("links_form.html", form=form), 400
 
 
+@bp.route("/update/<id>/", methods=["POST", "GET"])
+def links_update(id):
+    collection = get_db().links
+    link = collection.find_one({"_id": ObjectId(id)})
+
+    if not link:
+        return "Link not found", 404
+
+    if request.method == "GET":
+        form = LinkForm(data=link)
+        return render_template("links_form.html", form=form)
+
+    # disable csrf for now, to make it easy to test this URL
+    form = LinkForm(request.form, meta={"csrf": False})
+    if form.validate_on_submit():
+        update_link(link, **form.data)
+        return redirect(url_for("links.links"))
+    print(form.errors)
+    return render_template("links_form.html", form=form), 400
+
+
+def update_link(link, **kwargs):
+    kwargs.pop("csrf_token", None)
+    link.update(kwargs)
+    get_db().links.replace_one({"_id": link["_id"]}, link)
+    return link
+
+
 def create_link(**kwargs):
     kwargs.pop("csrf_token", None)
 
@@ -64,7 +92,7 @@ def links_delete(id):
     link = collection.find_one({"_id": ObjectId(id)})
 
     if not link:
-        return "Bookmark not found", 404
+        return "Link not found", 404
 
     if request.method == "GET":
         return render_template("confirm_delete.html", link=link)

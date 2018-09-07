@@ -47,6 +47,32 @@ def test_create_link_puts_url_in_if_title_is_not_provided(app, onelink):
     assert fetched["title"] == onelink["url"]
 
 
+def test_links_update_get_invalid_url(client):
+    id = ObjectId("5b92b2cd5e378f694898087b")
+    res = client.get(f"/links/update/{id}/")
+    assert res.status_code == 404
+
+
+def test_links_update_get_valid_url(client, onelink):
+    id = ObjectId("5b92b2cd5e378f694898087c")
+    create_link(_id=ObjectId(id), **onelink)
+
+    res = client.get(f"/links/update/{id}/")
+    assert res.status_code == 200
+
+
+def test_links_update_post(client, onelink):
+    id = ObjectId("5b92b2cd5e378f694898087d")
+    create_link(_id=ObjectId(id), **onelink)
+
+    onelink["url"] = "https://google.com/asdf/"
+    res = client.post(f"/links/update/{id}/", data=onelink)
+    assert res.status_code == 302
+
+    fetched = get_db().links.find_one({"_id": id})
+    assert fetched["url"] == "https://google.com/asdf/"
+
+
 def test_delete_link(client, onelink):
     id = ObjectId("5b92b2cd5e378f694898087a")
     create_link(_id=ObjectId(id), **onelink)
