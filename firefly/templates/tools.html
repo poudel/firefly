@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="pv2">
+        <div class="b black-80">Bookmarklet</div>
+        <div class="mt3">This bookmarklet can be used to quickly create bookmark from
+            the page you're visiting.
+
+        </div>
+        <div class="mt3">
+            <a class="link blue pa1 ba b--dashed mt2" href="javascript:window.location=%22http://localhost:5000/links/create/?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title);">
+                Bookmark me
+            </a>
+        </div>
+
+        <div class="mt3">
+            Please drag and drop the button above on your browser's bookmarks bar.
+        </div>
+    </div>
+
+{% endblock %}
