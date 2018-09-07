@@ -21,12 +21,11 @@ def test_links_create_get(client):
     assert res.status_code == 200
 
 
-@pytest.mark.skip
 def test_links_create_post_is_creating(client, onelink):
     onelink["title"] = "creation"
 
     res = client.post("/links/create/", data=onelink)
-    assert res.status_code == 200
+    assert res.status_code == 302
 
     fetched = list(get_db().links.find())[0]
     assert fetched["title"] == "creation"

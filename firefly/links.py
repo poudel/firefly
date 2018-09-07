@@ -39,7 +39,8 @@ def links_create():
             form = LinkForm()
         return render_template("links_form.html", form=form)
 
-    form = LinkForm(request.form)
+    # disable csrf for now, to make it easy to test this URL
+    form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         create_link(**form.data)
         return redirect(url_for("links.links"))
