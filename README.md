@@ -28,3 +28,5 @@ abstract goals or direction for the project.
 
 ## TODO
 
+* backup database (with encryption??)
+* restore from backup

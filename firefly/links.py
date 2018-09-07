@@ -66,7 +66,7 @@ def links_delete(id):
         return "Bookmark not found", 404
 
     if request.method == "GET":
-        return render_template("confirm_delete.html")
+        return render_template("confirm_delete.html", link=link)
 
     collection.remove(link)
     return redirect(url_for("links.links"))

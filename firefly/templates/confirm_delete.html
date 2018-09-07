@@ -4,6 +4,37 @@
 
     <div class="pa2">
         <form method="post" action="">
+            <p>You're about to delete following item:</p>
+
+            <div class="pa2 ba b--dashed b--red">
+                <a class="link dark-blue underline-hover" href="{{ link.url }}" target="_blank">
+                    {{ link.title }}
+                </a>
+                <div class="f7">
+                    <span class="dark-green">{{ link.url }}</span>
+                </div>
+
+                {% if link.description %}
+                    <div class="mt1 f6 dark-gray">
+                        {{ link.description }}
+                    </div>
+                {% endif %}
+
+                {% if link.tags %}
+                    <div class="mt1">
+                        {% for tag in link.tags %}
+                            <span class="mr1 f6">
+                                <a class="purple link underline-hover" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="mt1 f7">
+                    <span title="{{ link.created_at }}" class="mr2 black-40">{{ link.created_at }}</span>
+                </div>
+            </div>
+
             <p>
                 Are you sure you want to delete this item?
                 This action is <span class="bg-yellow">permanent</span> and cannot be undone!
