@@ -27,18 +27,18 @@ class PreferenceForm(FlaskForm):
     show_saved_link = BooleanField(
         "Display 'saved' button (redirects to a saved version)", default=True
     )
-    show_archived_link = BooleanField(
-        "Show a link to archive sites such as archive.is", default=True
-    )
     show_created_time = BooleanField(
         "Display created time in humanized form", default=True
+    )
+    show_hn_link = BooleanField("Show hackernews search link", default=True)
+    show_archived_link = BooleanField(
+        "Show a link to archive sites such as archive.is", default=True
     )
     archive_link_format = StringField(
         "Format for archive URL",
         default="https://archive.is/{url}",
         validators=[URL(), Required()],
     )
-    show_hn_link = BooleanField("Show hackernews search link", default=True)
     page_size = IntegerField(
         "Bookmarks page size", default=20, validators=[Required(), NumberRange(5, 200)]
     )

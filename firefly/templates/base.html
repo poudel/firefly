@@ -10,8 +10,15 @@
     </head>
     <body class="sans-serif">
         <!-- start navbar -->
-        <div class="bb pv1 ph2 b">
-            <a class="link dark-blue" href="/">firefly</a>
+        <div class="bb pv1 ph2">
+            <div class="fl w-10">
+                <a class="link dark-blue b" href="/">Firefly</a>
+            </div>
+            <div>
+                <a class="link blue underline-hover" href="{{ url_for('links.links_create') }}">new bookmark</a>
+            </div>
+
+            <div class="cf"></div>
         </div>
         <!-- end navbar -->
 
@@ -26,8 +33,6 @@
                     <div class="mt3">
                         <ul class="list pl0">
                             <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">Home</a></li>
-
-                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('links.links_create') }}">Create</a></li>
 
                             <!-- <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
                                  <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
