@@ -59,7 +59,7 @@
                         <span title="{{ link.created_at }}" class="mr2 black-40">{{ link.naturaltime }}</span>
                     {% endif %}
                     <a class="link black-40 underline-hover" href="{{ link._id  }}">edit</a>
-                    <a class="ml2 link black-40 underline-hover" href="{{ link._id }}">delete</a>
+                    <a class="ml2 link black-40 underline-hover" href="{{ url_for('links.links_delete', id=link._id) }}">delete</a>
                     {% if config.show_copy_link %}
                         <a class="ml2 link black-40 underline-hover copy-btn"
                            title="Copy this link{% if config.copy_with_title %} along with the title{% endif %} to the clipboard"

@@ -1,7 +1,8 @@
-import pytest
 from datetime import datetime
+import pytest
+from bson.objectid import ObjectId
 from firefly.db import get_db
-from firefly.links import get_links, links_pre_render, create_link, LinkForm
+from firefly.links import get_links, links_pre_render, create_link, delete_link
 
 
 @pytest.fixture
@@ -12,7 +13,6 @@ def onelink():
         "description": "A search engine",
         "tags": "search alphabet",
         "make_a_copy": True,
-        "csrf_token": "ADSASD",
     }
 
 
@@ -24,7 +24,6 @@ def test_links_create_get(client):
 @pytest.mark.skip
 def test_links_create_post_is_creating(client, onelink):
     onelink["title"] = "creation"
-    del onelink["csrf_token"]
 
     res = client.post("/links/create/", data=onelink)
     assert res.status_code == 200
@@ -49,8 +48,35 @@ def test_create_link_puts_url_in_if_title_is_not_provided(app, onelink):
     assert fetched["title"] == onelink["url"]
 
 
-def test_delete_link(app):
-    pass
+def test_delete_link(client, onelink):
+    id = ObjectId("5b92b2cd5e378f694898087a")
+    create_link(_id=ObjectId(id), **onelink)
+
+    res = delete_link(id)
+    assert res.deleted_count == 1
+
+
+def test_links_delete_get_with_invalid_id(client):
+    id = ObjectId("5b92b2cd5e378f694898087a")
+    res = client.get(f"/links/delete/{id}/")
+    assert res.status_code == 404
+
+
+def test_links_delete_get_with_valid_id(client, onelink):
+    id = ObjectId("5b92b2cd5e378f694898087a")
+    create_link(_id=ObjectId(id), **onelink)
+
+    res = client.get(f"/links/delete/{id}/")
+    assert res.status_code == 200
+
+
+def test_links_delete_post(client, onelink):
+    id = ObjectId("5b92b2cd5e378f694898087a")
+    create_link(_id=ObjectId(id), **onelink)
+
+    res = client.post(f"/links/delete/{id}/")
+    assert res.status_code == 302
+    assert not get_db().links.find_one({"_id": id})
 
 
 @pytest.fixture

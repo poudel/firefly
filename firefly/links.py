@@ -1,6 +1,7 @@
 import urllib
 from datetime import datetime
 import humanize
+from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField
@@ -46,7 +47,8 @@ def links_create():
 
 
 def create_link(**kwargs):
-    del kwargs["csrf_token"]
+    kwargs.pop("csrf_token", None)
+
     kwargs["created_at"] = datetime.now()
 
     if "title" not in kwargs:
@@ -55,8 +57,26 @@ def create_link(**kwargs):
     get_db().links.insert_one(kwargs)
 
 
+@bp.route("/delete/<id>/", methods=["GET", "POST"])
+def links_delete(id):
+    collection = get_db().links
+    link = collection.find_one({"_id": ObjectId(id)})
+
+    if not link:
+        return "Bookmark not found", 404
+
+    if request.method == "GET":
+        return render_template("confirm_delete.html")
+
+    collection.remove(link)
+    return redirect(url_for("links.links"))
+
+
 def delete_link(id):
-    get_db().links.find({"_id": id})
+    if not isinstance(id, ObjectId):
+        id = ObjectId(id)
+
+    return get_db().links.delete_one({"_id": id})
 
 
 def get_links(tag=None):
