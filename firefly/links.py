@@ -4,8 +4,11 @@ import humanize
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField
+from wtforms import StringField, BooleanField, TextAreaField
+from wtforms.fields.html5 import URLField
 from wtforms.validators import URL, Length, Required
+
+# from wtforms.widgets import TextArea
 from firefly.db import get_db
 from firefly.preferences import get_preferences
 from firefly.helpers import paginate_cursor
@@ -17,8 +20,8 @@ bp = Blueprint("links", __name__, url_prefix="/links")
 
 class LinkForm(FlaskForm):
     title = StringField("title", validators=[Length(max=100)])
-    url = StringField("url", validators=[URL(), Length(max=500), Required()])
-    description = StringField("description", validators=[Length(max=500)])
+    url = URLField("url", validators=[URL(), Length(max=500), Required()])
+    description = TextAreaField("description", validators=[Length(max=500)])
     tags = TagListField(
         "tags separated by space",
         validators=[Length(max=50)],
