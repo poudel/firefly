@@ -7,6 +7,8 @@ from wtforms import StringField, BooleanField
 from wtforms.validators import URL, Length, Required
 from firefly.db import get_db
 from firefly.preferences import get_preferences
+from firefly.helpers import paginate_cursor
+from firefly.form_fields import TagListField
 
 
 bp = Blueprint("links", __name__, url_prefix="/links")
@@ -16,7 +18,7 @@ class LinkForm(FlaskForm):
     title = StringField("title", validators=[Length(max=100)])
     url = StringField("url", validators=[URL(), Length(max=500), Required()])
     description = StringField("description", validators=[Length(max=500)])
-    tags = StringField(
+    tags = TagListField(
         "tags separated by space",
         validators=[Length(max=50)],
         description="Space separated",
@@ -40,21 +42,16 @@ def links_create():
     if form.validate_on_submit():
         create_link(**form.data)
         return redirect(url_for("links.links"))
-    return render_template("links_form.html", form=form)
+    return render_template("links_form.html", form=form), 400
 
 
 def create_link(**kwargs):
-    make_a_copy = kwargs.pop("make_a_copy")
     del kwargs["csrf_token"]
-
-    tags = map(lambda t: t.strip(), kwargs["tags"].split(" "))
-    tags = list(filter(lambda t: bool(t), tags))
-    if tags:
-        kwargs["tags"] = tags
-
     kwargs["created_at"] = datetime.now()
+
     if "title" not in kwargs:
         kwargs["title"] = kwargs["url"]
+
     get_db().links.insert_one(kwargs)
 
 
@@ -78,20 +75,6 @@ def links_pre_render(links_queryset):
         link["domain"] = urllib.parse.urlparse(link["url"]).hostname
         data.append(link)
     return data
-
-
-def paginate_cursor(cursor, page_size, page_num):
-    """
-    returns a set of documents belonging to page number `page_num`
-    where size of each page is `page_size`.
-
-    Copy pasted from: https://www.codementor.io/arpitbhayani/fast-and-efficient-pagination-in-mongodb-9095flbqr
-    """
-    # Calculate number of documents to skip
-    skips = page_size * (page_num - 1)
-
-    # Skip and limit
-    return cursor.skip(skips).limit(page_size)
 
 
 @bp.route("/")
