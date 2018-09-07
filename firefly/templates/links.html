@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="mv-2 f6">
-        <a class="link dark-blue" href="">older-entries</a>
+    {% if next_page_num or prev_page_num %}
+    <div class="mb3 f6">
+        {% if next_page_num %}
+            <a class="link dark-blue mr3" href="{{ url_for('links.links', tag=selected_tag, page=next_page_num) }}">older-entries</a>
+        {% endif %}
+
+        {% if prev_page_num %}
+            <a class="link dark-blue" href="{{ url_for('links.links', tag=selected_tag, page=prev_page_num) }}">newer-entries</a>
+        {% endif %}
     </div>
+    {% endif %}
+
     <div class="pv2">
         {% for link in links %}
             <div class="mb4">
@@ -39,7 +48,7 @@
                 <div class="mt1">
                     {% for tag in link.tags %}
                         <span class="mr1 f6">
-                            <a class="dark-purple link underline-hover" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
+                            <a class="purple link underline-hover" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
                         </span>
                     {% endfor %}
                 </div>
@@ -53,16 +62,19 @@
                     <a class="ml2 link black-40 underline-hover" href="{{ link._id }}">delete</a>
                     {% if config.show_copy_link %}
                         <a class="ml2 link black-40 underline-hover copy-btn"
-                           title="Copy this link to the clipboard"
+                           title="Copy this link{% if config.copy_with_title %} along with the title{% endif %} to the clipboard"
                            href="javascript:;"
-                           data-clipboard-text="{{ link.url }}">copy</a>
+                           data-clipboard-text="{% if config.copy_with_title %}{{ link.title }} {% endif %}{{ link.url }}">copy</a>
 
                     {% endif %}
-                    {% if config.show_cached_link %}
-                        <a class="ml2 link black-40 underline-hover" href="">cached</a>
+                    {% if config.show_saved_link %}
+                        <a class="ml2 link black-40 underline-hover" href="">saved</a>
                     {% endif %}
                     {% if config.show_archived_link %}
                         <a class="ml2 link black-40 underline-hover" href="{{ config.archive_link_format.format(url=link.url) }}" target="_blank">archived</a>
+                    {% endif %}
+                    {% if config.show_hn_link %}
+                        <a class="ml2 link black-40 underline-hover" href="https://hn.algolia.com/?type=all&query={{ link.url }}" target="_blank">hn-threads</a>
                     {% endif %}
                 </div>
             </div>

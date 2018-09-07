@@ -9,10 +9,18 @@
 
             {% for field in form %}
                 {% if field.type != "CSRFTokenField" %}
-                    <div class="mb1">
+                    <div class="mb3">
                         {{ field }}
                         {{ field.label }}
+
+                        {% if field.errors %}
+                            <span class="red">
+                                (Error: {{ field.errors[0] }})
+                            </span>
+                        {% endif %}
+
                     </div>
+
                 {% endif %}
             {% endfor %}
 

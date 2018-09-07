@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField
+from wtforms import BooleanField, StringField, IntegerField
+from wtforms.validators import Required, URL, NumberRange
 from firefly.db import get_db
 from firefly.form_utils import get_form_defaults
 
@@ -20,8 +21,11 @@ class PreferenceForm(FlaskForm):
     show_copy_link = BooleanField(
         "Display 'copy' button (copies the URL to clipboard)", default=True
     )
-    show_cached_link = BooleanField(
-        "Display 'cached' button (redirects to a cached version)", default=True
+    copy_with_title = BooleanField(
+        "Prepend the title before the link while copying", default=True
+    )
+    show_saved_link = BooleanField(
+        "Display 'saved' button (redirects to a saved version)", default=True
     )
     show_archived_link = BooleanField(
         "Show a link to archive sites such as archive.is", default=True
@@ -30,7 +34,13 @@ class PreferenceForm(FlaskForm):
         "Display created time in humanized form", default=True
     )
     archive_link_format = StringField(
-        "Format for archive URL", default="https://archive.is/{url}"
+        "Format for archive URL",
+        default="https://archive.is/{url}",
+        validators=[URL(), Required()],
+    )
+    show_hn_link = BooleanField("Show hackernews search link", default=True)
+    page_size = IntegerField(
+        "Bookmarks page size", default=20, validators=[Required(), NumberRange(5, 200)]
     )
 
 

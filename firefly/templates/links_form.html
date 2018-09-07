@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 
-{% block content_wrapper %}
+{% block content %}
     <div class="pa2">
-        <form action="" method="post">
-            <div class="">
-                <input type="text" placeholder="title">
-            </div>
 
-            <div class="mt2">
-                <input type="text" placeholder="url">
-            </div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
 
-            <div class="mt2">
-                <input type="text" placeholder="tags">
-            </div>
+            {% for field in form %}
+                {% if field.type != "CSRFTokenField" %}
+                    <div class="mb1">
+                        {{ field(style="width: 50%") }}
+                        {{ field.label }}
 
-            <div class="mt2">
-                <textarea rows="3" placeholder="description..."></textarea>
-            </div>
+                        {% if field.errors %}
+                            <span class="red">
+                                (Error: {{ field.errors[0] }})
+                            </span>
+                        {% endif %}
+
+                    </div>
+                {% endif %}
+            {% endfor %}
 
             <div class="mt3">
-                <input type="submit" value="create">
+                <input type="submit" value="save">
             </div>
         </form>
     </div>

@@ -16,36 +16,54 @@
         <!-- end navbar -->
 
         {% block content_wrapper %}
-        <div>
-            <div class="fl w-10 pa2">
-                <div class="mt2">
-                    <input class="w-100" type="text" placeholder="search..." />
-                </div>
+            <div>
+                <div class="fl w-10 pa2">
+                    <div class="mt2">
+                        <input class="w-100" type="text" placeholder="search..." />
+                    </div>
 
-                <!-- TODO: use a place to store shortcuts -->
-                <div class="mt3">
-                    <ul class="list pl0">
-                        <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">Home</a></li>
+                    <!-- TODO: use a place to store shortcuts -->
+                    <div class="mt3">
+                        <ul class="list pl0">
+                            <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">Home</a></li>
 
-                        <!-- <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
-                             <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
-                             <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
-                             <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
-                        -->
-                        <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">Preferences</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Tools</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Extensions</a></li>
-                        <li class="mt2"><a class="link navy underline-hover" href="">Documentation</a></li>
-                    </ul>
+                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('links.links_create') }}">Create</a></li>
+
+                            <!-- <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Playlists</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Github stars</a></li>
+                                 <li class="mt2"><a class="link navy underline-hover" href="">Start page</a></li>
+                            -->
+                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">Preferences</a></li>
+                            
+                            <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="">Tools</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="">Extensions</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="">Documentation</a></li>
+
+                        </ul>
+
+                        <div class="mt4">
+                            <span class="b black-80">Bookmarklet</span>
+                            <div class="ba b--dotted mt2">
+                                <a class="link black-50 pa1" href="javascript:window.location=%22http://localhost:5000/links/create/?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title);">
+                                    Bookmark me
+                                </a>
+                            </div>
+
+                            <div class="f7 black-50 mt2">drag+drop the above button on your bookmarks bar</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="fl w-70 pa2 br bl b--light-gray">
-            {% block content %}
-            {% endblock %}
-            </div>
-            <div class="fl w-20 pa2">
-            </div>
+                <div class="fl w-70 pa2 br bl b--light-gray">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <div class="fl w-20 pa2">
+                </div>
         </div>
         {% endblock %}
         {% block footer %}
