@@ -6,7 +6,7 @@
         <form method="post" action="">
             <p>You're about to delete following item:</p>
 
-            <div class="pa2 ba b--dashed b--red">
+            <div class="pa2 ba bw1 b--dashed b--red">
                 <a class="link dark-blue underline-hover" href="{{ link.url }}" target="_blank">
                     {{ link.title }}
                 </a>
@@ -15,7 +15,7 @@
                 </div>
 
                 {% if link.description %}
-                    <div class="mt1 f6 dark-gray">
+                    <div class="mt1 f6 gray">
                         {{ link.description }}
                     </div>
                 {% endif %}
@@ -31,7 +31,7 @@
                 {% endif %}
 
                 <div class="mt1 f7">
-                    <span title="{{ link.created_at }}" class="mr2 black-40">{{ link.created_at }}</span>
+                    <span class="mr2 black-40">created at {{ link.created_at }}</span>
                 </div>
             </div>
 
@@ -41,6 +41,9 @@
             </p>
 
             <input type="submit" value="yes">
+
+            <a class="ml3 link underline-hover" href="{{ url_for('links.links') }}">back to list</a>
+
         </form>
     </div>
 
