@@ -19,9 +19,9 @@
                     {{ note.title }}
                 </a>
 
-                {% if note.content %}
+                {% if note.description %}
                     <div class="mt1 f6 gray">
-                        {{ note.content[:100] }}
+                        {{ note.description[:100] }}
                     </div>
                 {% endif %}
 
@@ -40,8 +40,8 @@
                         <span title="{{ note.created_at }}" class="mr2 black-40">{{ note.naturaltime }}</span>
                     {% endif %}
 
-                    <a class="link black-40 underline-hover" href="{{ url_for('links.links_update', id=note['_id'])  }}">edit</a>
-                    <a class="ml2 link black-40 underline-hover" href="{{ url_for('links.links_delete', id=note._id) }}">delete</a>
+                    <a class="link black-40 underline-hover" href="{{ url_for('notes.notes_update', id=note['_id'])  }}">edit</a>
+                    <a class="ml2 link black-40 underline-hover" href="{{ url_for('notes.notes_delete', id=note._id) }}">delete</a>
                 </div>
 
             </div>

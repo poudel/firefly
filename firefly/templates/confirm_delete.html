@@ -7,22 +7,25 @@
             <p>You're about to delete following item:</p>
 
             <div class="pa2 ba bw1 b--dashed b--red">
-                <a class="link dark-blue underline-hover" href="{{ link.url }}" target="_blank">
-                    {{ link.title }}
+                <a class="link dark-blue underline-hover" href="{{ item.url }}" target="_blank">
+                    {{ item.title }}
                 </a>
-                <div class="f7">
-                    <span class="dark-green">{{ link.url }}</span>
-                </div>
 
-                {% if link.description %}
-                    <div class="mt1 f6 gray">
-                        {{ link.description }}
+                {% if item.url %}
+                    <div class="f7">
+                        <span class="dark-green">{{ item.url }}</span>
                     </div>
                 {% endif %}
 
-                {% if link.tags %}
+                {% if item.description %}
+                    <div class="mt1 f6 gray">
+                        {{ item.description }}
+                    </div>
+                {% endif %}
+
+                {% if item.tags %}
                     <div class="mt1">
-                        {% for tag in link.tags %}
+                        {% for tag in item.tags %}
                             <span class="mr1 f6">
                                 <a class="purple link underline-hover" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
                             </span>
@@ -31,7 +34,7 @@
                 {% endif %}
 
                 <div class="mt1 f7">
-                    <span class="mr2 black-40">created at {{ link.created_at }}</span>
+                    <span class="mr2 black-40">created at {{ item.created_at }}</span>
                 </div>
             </div>
 
@@ -42,7 +45,7 @@
 
             <input type="submit" value="yes">
 
-            <a class="ml3 link underline-hover" href="{{ url_for('links.links') }}">back to list</a>
+            <a class="ml3 link underline-hover" href="{{ back_url }}">back to list</a>
 
         </form>
     </div>

@@ -99,7 +99,9 @@ def links_delete(id):
         return "Link not found", 404
 
     if request.method == "GET":
-        return render_template("confirm_delete.html", link=link)
+        return render_template(
+            "confirm_delete.html", item=link, back_url=url_for("links.links")
+        )
 
     collection.remove(link)
     return redirect(url_for("links.links"))
