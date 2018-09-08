@@ -14,6 +14,12 @@
     {% endif %}
 
     <div class="pv2">
+        {% if not links %}
+            <div class="red f7">
+                Fill what's empty. Empty what's full.
+            </div>
+        {% endif %}
+
         {% for link in links %}
             <div class="mb4">
                 <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if config.open_new_tab %}target="_blank"{% endif %}>

@@ -11,11 +11,14 @@
     <body class="sans-serif">
         <!-- start navbar -->
         <div class="bb pv1 ph2">
-            <div class="fl w-10">
-                <a class="link dark-blue b" href="/">Firefly</a>
-            </div>
             <div>
-                <a class="link blue underline-hover" href="{{ url_for('links.links_create') }}">new bookmark</a>
+                <a class="link dark-blue b" href="/">firefly</a>
+
+                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">new</a>
+                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">notes</a>
+                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">saved</a>
+                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">startpage</a>
+                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">tabs</a>
             </div>
 
             <div class="cf"></div>
@@ -32,20 +35,11 @@
                     <!-- TODO: use a place to store shortcuts -->
                     <div class="mt3">
                         <ul class="list pl0">
-                            <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">Home</a></li>
-
-                            <!-- <li class="mt2"><a class="link navy underline-hover" href="">Notes</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Saved</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Lists</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Playlists</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Tabs</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Github stars</a></li>
-                                 <li class="mt2"><a class="link navy underline-hover" href="">Start page</a></li>
-                            -->
-                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">Preferences</a></li>
-                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('views.tools') }}">Tools</a></li>
-                            <li class="mt2"><a class="link navy underline-hover" href="">Organazize</a></li>
-                            <li class="mt2"><a class="link navy underline-hover" href="">Documentation</a></li>
+                            <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">home</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">preferences</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('views.tools') }}">tools</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="">organazize</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="">docs</a></li>
 
                         </ul>
                     </div>

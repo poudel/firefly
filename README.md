@@ -22,6 +22,8 @@ abstract goals or direction for the project.
 * The code should be well tested.
 * Should always be liberal when it comes to adding features that ease
   on organizing our daily digital life.
+* Should always be conservataive when it comes to drastically changing
+  the user interface.
 * Should keep backwards compatibility.
 * Should be oriented to tech-savvy and power users.
 
