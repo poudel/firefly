@@ -19,12 +19,12 @@ bp = Blueprint("notes", __name__, url_prefix="/notes")
 
 class NoteForm(FlaskForm):
     title = StringField("title", validators=[Length(max=200)])
-    description = TextAreaField("content", validators=[Required()])
     tags = TagListField(
         "tags separated by space",
         validators=[Length(max=50)],
         description="Space separated",
     )
+    description = TextAreaField("content", validators=[Required()])
 
 
 @bp.route("/create/", methods=["POST", "GET"])

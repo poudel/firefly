@@ -11,7 +11,9 @@
             {% for field in form %}
                 {% if field.type != "CSRFTokenField" %}
                     <div class="mb1">
+
                         {{ field(style="width: 50%") }}
+
                         {{ field.label }}
 
                         {% if field.errors %}
