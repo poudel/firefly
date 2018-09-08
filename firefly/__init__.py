@@ -15,10 +15,11 @@ def create_app(config=None):
     app.config.update(default_config)
     app.secret_key = default_config["secret_key"]
 
-    from firefly import links, preferences, views
+    from firefly import links, preferences, views, notes
 
     app.register_blueprint(links.bp)
     app.register_blueprint(preferences.bp)
     app.register_blueprint(views.bp)
+    app.register_blueprint(notes.bp)
     app.add_url_rule("/", endpoint="links.links")
     return app

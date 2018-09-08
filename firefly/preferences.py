@@ -40,7 +40,12 @@ class PreferenceForm(FlaskForm):
         validators=[URL(), Required()],
     )
     page_size = IntegerField(
-        "Bookmarks page size", default=20, validators=[Required(), NumberRange(5, 200)]
+        "Bookmarks list pagination size",
+        default=20,
+        validators=[Required(), NumberRange(5, 200)],
+    )
+    enable_notes = BooleanField(
+        "Enable notes feature: save notes, code snippets etc.", default=True
     )
 
 
