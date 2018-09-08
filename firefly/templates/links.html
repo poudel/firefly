@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if next_page_num or prev_page_num %}
     <div class="mb2 mt1 f6">
+        <a class="link dark-blue mr3" href="{{ url_for('links.links_create') }}">create</a>
+
         {% if next_page_num %}
-            <a class="link dark-blue mr3" href="{{ url_for('links.links', tag=selected_tag, page=next_page_num) }}">older</a>
+            <a class="link dark-blue mr3" href="{{ url_for('links.links', tag=selected_tag, page=next_page_num) }}">next</a>
         {% endif %}
 
         {% if prev_page_num %}
-            <a class="link dark-blue" href="{{ url_for('links.links', tag=selected_tag, page=prev_page_num) }}">newer</a>
+            <a class="link dark-blue" href="{{ url_for('links.links', tag=selected_tag, page=prev_page_num) }}">prev</a>
         {% endif %}
     </div>
-    {% endif %}
 
     <div class="pv2">
         {% if not links %}

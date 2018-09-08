@@ -2,7 +2,9 @@
 
 {% block content %}
     <div class="pa2">
-
+        {% if page_title %}
+            <h4 class="f4 mt0 mb3">{{ page_title }}</h4>
+        {% endif %}
         <form method="POST" action="">
             {{ form.hidden_tag() }}
 

@@ -13,9 +13,6 @@
         <div class="bb pv1 ph2">
             <div>
                 <a class="link dark-blue b f4" href="/">firefly</a>
-
-                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">new</a>
-                <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">notes</a>
                 <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">saved</a>
                 <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">startpage</a>
                 <a class="link dark-blue underline-hover ml2" href="{{ url_for('links.links_create') }}">tabs</a>
@@ -28,14 +25,10 @@
         {% block content_wrapper %}
             <div>
                 <div class="fl w-10 pa2">
-                    <div class="mt2">
-                        <input class="w-100" type="text" placeholder="search..." />
-                    </div>
-
-                    <!-- TODO: use a place to store shortcuts -->
-                    <div class="mt3">
-                        <ul class="list pl0">
-                            <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">home</a></li>
+                    <div class="mt1">
+                        <ul class="list pl0 mt0">
+                            <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">links</a></li>
+                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('notes.notes') }}">notes</a></li>
                             <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">preferences</a></li>
                             <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('views.tools') }}">tools</a></li>
                             <li class="mt2"><a class="link navy underline-hover" href="">organazize</a></li>
@@ -43,7 +36,12 @@
 
                         </ul>
                     </div>
+
+                    <div class="mt2">
+                        <input class="w-100" type="text" placeholder="search..." />
+                    </div>
                 </div>
+
                 <div class="fl w-70 pa2 br bl b--light-gray">
                     {% block content %}
                     {% endblock %}

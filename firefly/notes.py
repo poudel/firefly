@@ -15,9 +15,7 @@ bp = Blueprint("notes", __name__, url_prefix="/notes")
 
 
 class NoteForm(FlaskForm):
-    title = StringField(
-        "title", validators=[Length(max=200)], default="Untitled"
-    )
+    title = StringField("title", validators=[Length(max=200)])
     content = TextAreaField("content")
     tags = TagListField(
         "tags separated by space",
@@ -28,19 +26,26 @@ class NoteForm(FlaskForm):
 
 @bp.route("/create/", methods=["POST", "GET"])
 def notes_create():
+    page_title = "adding note"
+
     if request.method == "GET":
         form = NoteForm()
-        return render_template("form.html", form=form)
+        return render_template("form.html", form=form, page_title=page_title)
 
     form = NoteForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         create_note(**form.data)
         return redirect(url_for("notes.notes"))
-    return render_template("form.html", form=form), 400
+    return render_template("form.html", form=form, title=page_title), 400
 
 
 def create_note(**kwargs):
-    pass
+    kwargs.pop("csrf_token", None)
+    kwargs["created_at"] = datetime.now()
+
+    if "title" not in kwargs:
+        kwargs["title"] = "Untitled note"
+    get_db().notes.insert_one(**kwargs)
 
 
 @bp.route("/")

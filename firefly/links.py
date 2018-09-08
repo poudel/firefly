@@ -31,6 +31,7 @@ class LinkForm(FlaskForm):
 
 @bp.route("/create/", methods=["POST", "GET"])
 def links_create():
+    page_title = "adding link"
     if request.method == "GET":
         url = request.args.get("url")
         title = request.args.get("title")
@@ -39,14 +40,14 @@ def links_create():
             form = LinkForm(data={"url": url, "title": title})
         else:
             form = LinkForm()
-        return render_template("form.html", form=form)
+        return render_template("form.html", form=form, page_title=page_title)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         create_link(**form.data)
         return redirect(url_for("links.links"))
-    return render_template("form.html", form=form), 400
+    return render_template("form.html", form=form, page_title=page_title), 400
 
 
 @bp.route("/update/<id>/", methods=["POST", "GET"])
@@ -57,17 +58,18 @@ def links_update(id):
     if not link:
         return "Link not found", 404
 
+    page_title = "updating link"
+
     if request.method == "GET":
         form = LinkForm(data=link)
-        return render_template("form.html", form=form)
+        return render_template("form.html", form=form, page_title=page_title)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         update_link(link, **form.data)
         return redirect(url_for("links.links"))
-    print(form.errors)
-    return render_template("form.html", form=form), 400
+    return render_template("form.html", form=form, page_title=page_title), 400
 
 
 def update_link(link, **kwargs):
