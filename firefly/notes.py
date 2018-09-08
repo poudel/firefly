@@ -91,7 +91,10 @@ def notes_delete(id):
 
     if request.method == "GET":
         return render_template(
-            "confirm_delete.html", item=note, back_url=url_for("notes.notes")
+            "confirm_delete.html",
+            item=note,
+            back_url=url_for("notes.notes"),
+            page_title="deleting note",
         )
 
     collection.remove(note)

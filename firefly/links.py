@@ -14,6 +14,7 @@ from firefly.helpers import paginate_cursor
 from firefly.form_fields import TagListField
 
 
+# pylint: disable=invalid-name
 bp = Blueprint("links", __name__, url_prefix="/links")
 
 
@@ -100,7 +101,10 @@ def links_delete(id):
 
     if request.method == "GET":
         return render_template(
-            "confirm_delete.html", item=link, back_url=url_for("links.links")
+            "confirm_delete.html",
+            item=link,
+            back_url=url_for("links.links"),
+            page_title="deleting link",
         )
 
     collection.remove(link)
