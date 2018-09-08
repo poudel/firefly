@@ -7,7 +7,9 @@ import humanize
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, TextAreaField
 from wtforms.validators import URL, Length, Required
+from firefly.db import get_db
 from firefly.form_fields import TagListField
+from firefly.preferences import get_preferences
 
 
 # pylint: disable=invalid-name
@@ -45,12 +47,35 @@ def create_note(**kwargs):
 
     if "title" not in kwargs:
         kwargs["title"] = "Untitled note"
-    get_db().notes.insert_one(**kwargs)
+    get_db().notes.insert_one(kwargs)
+
+
+def get_links(tag=None):
+    if tag:
+        query = {"tags": {"$in": [tag]}}
+    else:
+        query = {}
+    return get_db().notes.find(query).sort("created_at", -1)
+
+
+def notes_pre_render(links_queryset):
+    data = []
+
+    for link in links_queryset:
+        link["naturaltime"] = humanize.naturaltime(link["created_at"])
+        data.append(link)
+    return data
 
 
 @bp.route("/")
 def notes():
-    return render_template("notes.html")
+    tag = request.args.get("tag", None)
+
+    context = {
+        "notes": notes_pre_render(get_links(tag)),
+        "config": get_preferences(),
+    }
+    return render_template("notes.html", **context)
 
 
 @bp.route("/detail/<id>/")
