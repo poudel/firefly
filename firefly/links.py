@@ -8,7 +8,6 @@ from wtforms import StringField, BooleanField, TextAreaField
 from wtforms.fields.html5 import URLField
 from wtforms.validators import URL, Length, Required
 
-# from wtforms.widgets import TextArea
 from firefly.db import get_db
 from firefly.preferences import get_preferences
 from firefly.helpers import paginate_cursor
@@ -40,14 +39,14 @@ def links_create():
             form = LinkForm(data={"url": url, "title": title})
         else:
             form = LinkForm()
-        return render_template("links_form.html", form=form)
+        return render_template("form.html", form=form)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         create_link(**form.data)
         return redirect(url_for("links.links"))
-    return render_template("links_form.html", form=form), 400
+    return render_template("form.html", form=form), 400
 
 
 @bp.route("/update/<id>/", methods=["POST", "GET"])
@@ -60,7 +59,7 @@ def links_update(id):
 
     if request.method == "GET":
         form = LinkForm(data=link)
-        return render_template("links_form.html", form=form)
+        return render_template("form.html", form=form)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
@@ -68,7 +67,7 @@ def links_update(id):
         update_link(link, **form.data)
         return redirect(url_for("links.links"))
     print(form.errors)
-    return render_template("links_form.html", form=form), 400
+    return render_template("form.html", form=form), 400
 
 
 def update_link(link, **kwargs):

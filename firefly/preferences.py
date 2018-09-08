@@ -13,11 +13,15 @@ class PreferenceForm(FlaskForm):
     show_target_link = BooleanField(
         "Show target link below bookmark title", default=True
     )
-    make_target_link_clickable = BooleanField("Also make it clickable", default=True)
+    make_target_link_clickable = BooleanField(
+        "Also make it clickable", default=True
+    )
     show_target_domain = BooleanField(
         "Show target domain (inside parenthesis)", default=True
     )
-    open_new_tab = BooleanField("Open bookmarked links in new tab", default=True)
+    open_new_tab = BooleanField(
+        "Open bookmarked links in new tab", default=True
+    )
     show_copy_link = BooleanField(
         "Display 'copy' button (copies the URL to clipboard)", default=True
     )
