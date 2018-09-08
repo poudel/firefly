@@ -148,7 +148,6 @@ def links():
     )
     context = {
         "links": links_qs,
-        "config": prefs,
         "current_page_num": page_num,
         "next_page_num": page_num + 1 if len(links_qs) == page_size else None,
         "prev_page_num": page_num - 1 if page_num > 1 else None,

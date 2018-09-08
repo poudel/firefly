@@ -22,20 +22,20 @@
 
         {% for link in links %}
             <div class="mb4">
-                <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if config.open_new_tab %}target="_blank"{% endif %}>
+                <a class="link dark-blue underline-hover" href="{{ link.url }}" {% if prefs.open_new_tab %}target="_blank"{% endif %}>
                     {{ link.title }}
                 </a>
 
-                {% if config.show_target_domain %}
+                {% if prefs.show_target_domain %}
                     <span class="black-30 f7">({{ link.domain }})</span>
                 {% endif %}
 
-                {% if config.show_target_link %}
+                {% if prefs.show_target_link %}
                     <div class="f7">
-                        {% if config.make_target_link_clickable %}
+                        {% if prefs.make_target_link_clickable %}
                             <a class="link underline-hover dark-green"
                                href="{{ link.url }}"
-                               {% if config.open_new_tab %}target="_blank"{% endif %}>
+                               {% if prefs.open_new_tab %}target="_blank"{% endif %}>
                                 {{ link.url }}
                             </a>
                         {% else %}
@@ -61,25 +61,25 @@
                 {% endif %}
 
                 <div class="mt1 f7">
-                    {% if config.show_created_time %}
+                    {% if prefs.show_created_time %}
                         <span title="{{ link.created_at }}" class="mr2 black-40">{{ link.naturaltime }}</span>
                     {% endif %}
                     <a class="link black-40 underline-hover" href="{{ url_for('links.links_update', id=link['_id'])  }}">edit</a>
                     <a class="ml2 link black-40 underline-hover" href="{{ url_for('links.links_delete', id=link._id) }}">delete</a>
-                    {% if config.show_copy_link %}
+                    {% if prefs.show_copy_link %}
                         <a class="ml2 link black-40 underline-hover copy-btn"
-                           title="Copy this link{% if config.copy_with_title %} along with the title{% endif %} to the clipboard"
+                           title="Copy this link{% if prefs.copy_with_title %} along with the title{% endif %} to the clipboard"
                            href="javascript:;"
-                           data-clipboard-text="{% if config.copy_with_title %}{{ link.title }} {% endif %}{{ link.url }}">copy</a>
+                           data-clipboard-text="{% if prefs.copy_with_title %}{{ link.title }} {% endif %}{{ link.url }}">copy</a>
 
                     {% endif %}
-                    {% if config.show_saved_link %}
+                    {% if prefs.show_saved_link %}
                         <a class="ml2 link black-40 underline-hover" href="">saved</a>
                     {% endif %}
-                    {% if config.show_archived_link %}
-                        <a class="ml2 link black-40 underline-hover" href="{{ config.archive_link_format.format(url=link.url) }}" target="_blank">archived</a>
+                    {% if prefs.show_archived_link %}
+                        <a class="ml2 link black-40 underline-hover" href="{{ prefs.archive_link_format.format(url=link.url) }}" target="_blank">archived</a>
                     {% endif %}
-                    {% if config.show_hn_link %}
+                    {% if prefs.show_hn_link %}
                         <a class="ml2 link black-40 underline-hover" href="https://hn.algolia.com/?type=all&query={{ link.url }}" target="_blank">hn-threads</a>
                     {% endif %}
                 </div>

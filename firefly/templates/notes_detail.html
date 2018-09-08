@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    Detail
+    <div class="pv2z">
+        <h4 class="f4 mv0">{{ note.title }}</h4>
+        <div>
+            {{ note.description|linebreaksbr }}
+        </div>
+    </div>
 {% endblock %}

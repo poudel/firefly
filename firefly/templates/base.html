@@ -28,7 +28,9 @@
                     <div class="mt1">
                         <ul class="list pl0 mt0">
                             <li><a class="link navy underline-hover" href="{{ url_for('links.links') }}">links</a></li>
-                            <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('notes.notes') }}">notes</a></li>
+                            {% if prefs.enable_notes %}
+                                <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('notes.notes') }}">notes</a></li>
+                            {% endif %}
                             <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('preferences.preferences') }}">preferences</a></li>
                             <li class="mt2"><a class="link navy underline-hover" href="{{ url_for('views.tools') }}">tools</a></li>
                             <li class="mt2"><a class="link navy underline-hover" href="">organazize</a></li>

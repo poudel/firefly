@@ -22,4 +22,9 @@ def create_app(config=None):
     app.register_blueprint(views.bp)
     app.register_blueprint(notes.bp)
     app.add_url_rule("/", endpoint="links.links")
+
+    @app.context_processor
+    def inject_prefs():
+        return {"prefs": preferences.get_preferences()}
+
     return app

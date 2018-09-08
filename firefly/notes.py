@@ -124,11 +124,17 @@ def notes():
 
     context = {
         "notes": notes_pre_render(get_notes(tag)),
-        "config": get_preferences(),
+        "prefs": get_preferences(),
     }
     return render_template("notes.html", **context)
 
 
 @bp.route("/detail/<id>/")
 def notes_detail(id):
-    return render_template("notes_detail.html")
+    collection = get_db().notes
+    note = collection.find_one({"_id": ObjectId(id)})
+
+    if not note:
+        return "Note not found", 404
+
+    return render_template("notes_detail.html", note=note)
