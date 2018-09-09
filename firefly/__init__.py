@@ -16,6 +16,9 @@ def create_app(config=None):
     app.secret_key = default_config["secret_key"]
 
     from firefly import links, preferences, views, notes
+    from firefly.template_filters import linebreaksbr
+
+    app.jinja_env.filters['linebreaksbr'] = linebreaksbr
 
     app.register_blueprint(links.bp)
     app.register_blueprint(preferences.bp)

@@ -49,7 +49,7 @@ class PreferenceForm(FlaskForm):
         validators=[Required(), NumberRange(5, 200)],
     )
     enable_notes = BooleanField(
-        "Enable notes feature: save notes, code snippets etc.", default=True
+        "Enable notes feature: save simple text notes.", default=True
     )
 
 
