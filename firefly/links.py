@@ -19,9 +19,9 @@ bp = Blueprint("links", __name__, url_prefix="/links")
 
 
 class LinkForm(FlaskForm):
-    title = StringField("title", validators=[Length(max=100)])
-    url = URLField("url", validators=[URL(), Length(max=500), Required()])
-    description = TextAreaField("description", validators=[Length(max=500)])
+    title = StringField("title", validators=[Length(max=300)])
+    url = URLField("url", validators=[URL(), Length(max=600), Required()])
+    description = TextAreaField("description", validators=[Length(max=1000)])
     tags = TagListField(
         "tags separated by space",
         validators=[Length(max=50)],
