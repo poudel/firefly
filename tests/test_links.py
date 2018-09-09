@@ -2,7 +2,13 @@ from datetime import datetime
 import pytest
 from bson.objectid import ObjectId
 from firefly.db import get_db
-from firefly.links import get_links, links_pre_render, create_link, delete_link
+from firefly.links import (
+    get_links,
+    links_pre_render,
+    create_link,
+    delete_link,
+    get_tags,
+)
 
 
 @pytest.fixture
@@ -148,6 +154,14 @@ def test_links_pre_render(app, save_links):
     assert "naturaltime" in google
     assert google["domain"] == "example.com"
     assert linkedin["domain"] == "www.example1.com"
+
+
+def test_get_tags(app, save_links):
+    tags = get_tags()
+    assert len(tags) == 3
+    assert "tag1" in tags
+    assert "tag2" in tags
+    assert "tag3" in tags
 
 
 def test_links_view(client):

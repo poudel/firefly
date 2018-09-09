@@ -136,6 +136,10 @@ def links_pre_render(links_queryset):
     return data
 
 
+def get_tags():
+    return get_db().links.distinct("tags")
+
+
 @bp.route("/")
 def links():
     page_num = int(request.args.get("page", 1))
@@ -152,5 +156,6 @@ def links():
         "next_page_num": page_num + 1 if len(links_qs) == page_size else None,
         "prev_page_num": page_num - 1 if page_num > 1 else None,
         "selected_tag": tag,
+        "tags": get_tags(),
     }
     return render_template("links.html", **context)

@@ -88,6 +88,16 @@
     </div>
 {% endblock content %}
 
+{% block right_sidebar %}
+    <div class="pv2">
+        {% for tag in tags %}
+            <div class="mt1">
+                <a class="link underline-hover f6 purple" href="{{ url_for('links.links', tag=tag) }}">{{ tag }}</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block footer %}
     <script src="{{ url_for('static', filename='clipboard.min.js') }}"></script>
     <script>
