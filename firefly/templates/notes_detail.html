@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="pv2z">
+
+    <div>
         <h4 class="f4 mv0">{{ note.title }}</h4>
+        <div class="mt1 f7">
+            <a class="link black-40 underline-hover" href="{{ url_for('notes.notes_update', id=note['_id'])  }}">edit</a>
+            <a class="link black-40 underline-hover ml2" href="{{ url_for('notes.notes_delete', id=note._id) }}">delete</a>
+        </div>
+
         <div>
-            {{ note.description|linebreaksbr }}
+            {{ note.html|safe }}
         </div>
     </div>
+{% endblock %}
+
+{% block header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='code.css') }}">
 {% endblock %}

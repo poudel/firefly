@@ -8,6 +8,8 @@ flask = "*"
 pymongo = "*"
 flask-wtf = "*"
 humanize = "*"
+pygments = "*"
+"markdown2" = "*"
 
 [dev-packages]
 mongomock = "*"

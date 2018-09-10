@@ -51,6 +51,9 @@ class PreferenceForm(FlaskForm):
     enable_notes = BooleanField(
         "Enable notes feature: save simple text notes.", default=True
     )
+    remove_ref_query_param = BooleanField(
+        "Remove 'ref' query parameter from links being bookmarked", default=True
+    )
 
 
 def get_defaults():

@@ -3,6 +3,7 @@ Notes: save notes, code snippets etc.
 """
 from datetime import datetime
 import humanize
+from markdown2 import markdown
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_wtf import FlaskForm
@@ -37,8 +38,8 @@ def notes_create():
 
     form = NoteForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
-        create_note(**form.data)
-        return redirect(url_for("notes.notes"))
+        result = create_note(**form.data)
+        return redirect(url_for("notes.notes_detail", id=result.inserted_id))
     return render_template("form.html", form=form, title=page_title), 400
 
 
@@ -49,7 +50,7 @@ def create_note(**kwargs):
     title = kwargs.get("title")
     if not title:
         kwargs["title"] = "untitled"
-    get_db().notes.insert_one(kwargs)
+    return get_db().notes.insert_one(kwargs)
 
 
 @bp.route("/update/<id>/", methods=["GET", "POST"])
@@ -70,7 +71,7 @@ def notes_update(id):
     form = NoteForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         update_note(note, **form.data)
-        return redirect(url_for("notes.notes"))
+        return redirect(url_for("notes.notes_detail", id=id))
     return render_template("form.html", form=form, page_title=page_title), 400
 
 
@@ -136,5 +137,10 @@ def notes_detail(id):
 
     if not note:
         return "Note not found", 404
+
+    note["html"] = markdown(
+        note["description"],
+        extras=["fenced-code-blocks", "break-on-newline", "cuddled-lists"],
+    )
 
     return render_template("notes_detail.html", note=note)
