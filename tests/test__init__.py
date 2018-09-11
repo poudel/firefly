@@ -8,8 +8,11 @@ def test_create_app_testing_config():
 
 def test_create_app_registers_blueprints():
     app = create_app()
+    assert len(app.blueprints) == 4
     assert app.blueprints["links"]
     assert app.blueprints["preferences"]
+    assert app.blueprints["views"]
+    assert app.blueprints["notes"]
 
 
 def test_create_app_override_config():

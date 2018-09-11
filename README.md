@@ -28,6 +28,13 @@ abstract goals or direction for the project.
 * Should be oriented to tech-savvy and power users.
 
 
+## Installation
+
+* Clone
+* Run `pipenv install --dev --skip-lock`
+* Run `FLASK_ENV=development FLASK_APP=firefly pipenv run flask run`
+
+
 ## TODO
 
 * backup database (with encryption??)
