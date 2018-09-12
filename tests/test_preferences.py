@@ -1,4 +1,5 @@
 import pytest
+from flask import g
 import firefly.preferences
 from firefly.preferences import (
     get_defaults,
@@ -18,6 +19,8 @@ def test_get_defaults():
 def test_get_preferences(app):
     prefs = get_preferences()
     assert isinstance(prefs, dict)
+    assert "prefs" in g
+    assert g.prefs == prefs
 
 
 def test_create_defaults(app):
@@ -84,6 +87,19 @@ def test_update_defaults_leaves_unchanged_keys_intact(app, monkeypatch):
     assert len(set(saved_config).intersection(defaults)) == len(defaults)
 
 
+def test_update_defaults_pops_prefs_from_g(app):
+    create_defaults()
+
+    # this sets the "prefs" key in g
+    get_preferences()
+    assert "prefs" in g
+
+    # this should remove it now
+    update_defaults()
+
+    assert "prefs" not in g
+
+
 def test_update_preferences_ignores_unknown_keys(app):
     update_preferences(asdfasdfasdf=True)
     prefs = get_db().preferences.find()[0]
@@ -98,6 +114,15 @@ def test_update_preferences_updates_prefs_in_db(app):
 
     prefs = get_db().preferences.find()[0]
     assert prefs[key] == "JAJA"
+
+
+def test_update_preferences_pops_prefs_from_g(app):
+    get_preferences()
+    assert "prefs" in g
+
+    update_preferences()
+
+    assert "prefs" not in g
 
 
 def test_preferences_view_get(client):

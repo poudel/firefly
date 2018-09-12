@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, g
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, IntegerField
 from wtforms.validators import Required, URL, NumberRange
@@ -54,6 +54,10 @@ class PreferenceForm(FlaskForm):
     remove_ref_query_param = BooleanField(
         "Remove 'ref' query parameter from links being bookmarked", default=True
     )
+    prepend_pdf_in_title = BooleanField(
+        "Prepend [PDF] at the beginning of a title if the URL ends with .pdf",
+        default=False,
+    )
 
 
 def get_defaults():
@@ -61,10 +65,15 @@ def get_defaults():
 
 
 def get_preferences():
-    config = get_db().preferences.find_one("1")
-    if not config:
-        return create_defaults()
-    return config
+    if "prefs" in g:
+        return g.prefs
+
+    prefs = get_db().preferences.find_one("1")
+    if not prefs:
+        prefs = create_defaults()
+
+    g.prefs = prefs
+    return g.prefs
 
 
 def create_defaults():
@@ -96,6 +105,8 @@ def update_defaults():
     config.update(updated)
     get_db().preferences.replace_one({"_id": config["_id"]}, config)
 
+    g.pop("prefs")
+
 
 def update_preferences(**kwargs):
     """
@@ -108,6 +119,8 @@ def update_preferences(**kwargs):
             pref[k] = v
 
     get_db().preferences.replace_one({"_id": pref["_id"]}, pref)
+
+    g.pop("prefs")
 
 
 @bp.route("/", methods=["GET", "POST"])
