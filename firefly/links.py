@@ -12,6 +12,7 @@ from firefly.db import get_db
 from firefly.preferences import get_preferences
 from firefly.helpers import paginate_cursor
 from firefly.form_fields import TagListField
+from firefly.archive import save_file
 
 
 # pylint: disable=invalid-name
@@ -80,15 +81,30 @@ def update_link(link, **kwargs):
     return link
 
 
+def make_copy_of_url(url, link_id):
+    file_id = save_file(url, link_id)
+
+    get_db().links.update_one(
+        {"_id": ObjectId(link_id)}, {"$set": {"saved_file": file_id}}
+    )
+
+
 def create_link(**kwargs):
     kwargs.pop("csrf_token", None)
-
     kwargs["created_at"] = datetime.now()
 
-    if "title" not in kwargs:
-        kwargs["title"] = kwargs["url"]
+    title = kwargs.get("title", kwargs["url"])
 
-    get_db().links.insert_one(kwargs)
+    prefs = get_preferences()
+    if prefs["prepend_pdf_in_title"]:
+        if kwargs["url"].lower().endswith(".pdf") and "[PDF]" not in title:
+            title = f"[PDF] {title}"
+
+    kwargs["title"] = title
+    result = get_db().links.insert_one(kwargs)
+
+    if kwargs.pop("make_a_copy", False):
+        make_copy_of_url(kwargs["url"], result.inserted_id)
 
 
 @bp.route("/delete/<id>/", methods=["GET", "POST"])

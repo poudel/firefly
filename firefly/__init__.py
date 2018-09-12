@@ -15,15 +15,16 @@ def create_app(config=None):
     app.config.update(default_config)
     app.secret_key = default_config["secret_key"]
 
-    from firefly import links, preferences, views, notes
+    from firefly import links, preferences, views, notes, archive
     from firefly.template_filters import linebreaksbr
 
-    app.jinja_env.filters['linebreaksbr'] = linebreaksbr
+    app.jinja_env.filters["linebreaksbr"] = linebreaksbr
 
     app.register_blueprint(links.bp)
     app.register_blueprint(preferences.bp)
     app.register_blueprint(views.bp)
     app.register_blueprint(notes.bp)
+    app.register_blueprint(archive.bp)
     app.add_url_rule("/", endpoint="links.links")
 
     @app.context_processor

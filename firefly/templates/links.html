@@ -73,8 +73,8 @@
                            data-clipboard-text="{% if prefs.copy_with_title %}{{ link.title }} {% endif %}{{ link.url }}">copy</a>
 
                     {% endif %}
-                    {% if prefs.show_saved_link %}
-                        <a class="ml2 link black-40 underline-hover" href="">saved</a>
+                    {% if prefs.show_saved_link and link.saved_file %}
+                        <a class="ml2 link black-40 underline-hover" href="{{ url_for('archive.archive_detail', id=link.saved_file) }}" target="_blank">saved</a>
                     {% endif %}
                     {% if prefs.show_archived_link %}
                         <a class="ml2 link black-40 underline-hover" href="{{ prefs.archive_link_format.format(url=link.url) }}" target="_blank">archived</a>

@@ -34,14 +34,6 @@ def test_create_defaults(app):
     assert saved_prefs[0]["_id"] == "1"
 
 
-@pytest.fixture
-def mocked_get_defaults(app):
-    defaults = get_defaults()
-    stale_key = defaults.keys()[0]
-    defaults.pop(stale_key)
-    return defaults
-
-
 def test_update_defaults_removes_stale_pref_key(app, monkeypatch):
     create_defaults()
 

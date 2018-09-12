@@ -10,6 +10,8 @@ flask-wtf = "*"
 humanize = "*"
 pygments = "*"
 "markdown2" = "*"
+requests = "*"
+requests-html = "*"
 
 [dev-packages]
 mongomock = "*"

@@ -2,6 +2,8 @@ from datetime import datetime
 import pytest
 from bson.objectid import ObjectId
 from firefly.db import get_db
+from firefly.preferences import get_preferences, update_preferences
+import firefly.links
 from firefly.links import (
     get_links,
     links_pre_render,
@@ -18,7 +20,7 @@ def onelink():
         "url": "https://example.com",
         "description": "A search engine",
         "tags": "search alphabet",
-        "make_a_copy": True,
+        "make_a_copy": False,  # set this to False to avoid running the crawler
     }
 
 
@@ -29,6 +31,7 @@ def test_links_create_get(client):
 
 def test_links_create_post_is_creating(client, onelink):
     onelink["title"] = "creation"
+    onelink["make_a_copy"] = None
 
     res = client.post("/links/create/", data=onelink)
     assert res.status_code == 302
@@ -43,6 +46,50 @@ def test_create_link(app, onelink):
     fetched = list(get_db().links.find())[0]
     assert "csrf_token" not in fetched, "should exclude csrf_token"
     assert "created_at" in fetched, "should add created_at"
+
+
+@pytest.fixture
+def mock_make_copy():
+    class Make:
+        def __call__(self, url, link_id):
+            self.url = url
+            self.link_id = link_id
+
+    return Make()
+
+
+def test_create_link_on_make_a_copy(app, onelink, monkeypatch, mock_make_copy):
+    onelink["make_a_copy"] = True
+    monkeypatch.setattr("firefly.links.make_copy_of_url", mock_make_copy)
+    create_link(**onelink)
+
+    assert mock_make_copy.url == onelink["url"]
+    assert mock_make_copy.link_id
+
+
+def test_create_link_puts_pdf_prefix_if_enabled_in_prefs(app, onelink):
+    # this creates a default preferences
+    get_preferences()
+    update_preferences(prepend_pdf_in_title=True)
+
+    onelink["url"] = "https://example.com/sample.pdf"
+    create_link(**onelink)
+
+    fetched = list(get_db().links.find())[0]
+    assert fetched["title"].startswith("[PDF] ")
+    assert fetched["title"] == "[PDF] " + onelink["title"]
+
+
+def test_create_link_doesnt_put_pdf_prefix_if_disabled_in_prefs(app, onelink):
+    # this creates a default preferences
+    get_preferences()
+    update_preferences(prepend_pdf_in_title=False)
+
+    onelink["url"] = "https://example.com/sample.pdf"
+    create_link(**onelink)
+
+    fetched = list(get_db().links.find())[0]
+    assert not fetched["title"].startswith("[PDF] ")
 
 
 def test_create_link_puts_url_in_if_title_is_not_provided(app, onelink):
