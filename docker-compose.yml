@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  firefly:
+    build:
+      context: .
+      dockerfile: ./dockerc/firefly/Dockerfile
+    container_name: firefly
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=firefly
+    command: /start.sh
+    volumes:
+      - .:/app
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    ports:
+      - 5000:5000
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: ./dockerc/mongodb/Dockerfile
+    container_name: mongodb
+    restart: always
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  data-volume:
