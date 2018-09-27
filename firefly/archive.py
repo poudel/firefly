@@ -1,10 +1,8 @@
-import os
 import mimetypes
 import gridfs
 from requests_html import HTMLSession
 from bson.objectid import ObjectId
-from flask import Blueprint, make_response, send_file
-from firefly.preferences import get_preferences
+from flask import Blueprint, send_file
 from firefly.db import get_db
 
 

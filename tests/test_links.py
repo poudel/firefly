@@ -3,7 +3,6 @@ import pytest
 from bson.objectid import ObjectId
 from firefly.db import get_db
 from firefly.preferences import get_preferences, update_preferences
-import firefly.links
 from firefly.links import (
     get_links,
     links_pre_render,
