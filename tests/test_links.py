@@ -19,7 +19,7 @@ def onelink():
         "url": "https://example.com",
         "description": "A search engine",
         "tags": "search alphabet",
-        "make_a_copy": False,  # set this to False to avoid running the crawler
+        "save_a_copy": False,  # set this to False to avoid running the crawler
     }
 
 
@@ -30,7 +30,7 @@ def test_links_create_get(client):
 
 def test_links_create_post_is_creating(client, onelink):
     onelink["title"] = "creation"
-    onelink["make_a_copy"] = None
+    onelink["save_a_copy"] = None
 
     res = client.post("/links/create/", data=onelink)
     assert res.status_code == 302
@@ -57,8 +57,8 @@ def mock_make_copy():
     return Make()
 
 
-def test_create_link_on_make_a_copy(app, onelink, monkeypatch, mock_make_copy):
-    onelink["make_a_copy"] = True
+def test_create_link_on_save_a_copy(app, onelink, monkeypatch, mock_make_copy):
+    onelink["save_a_copy"] = True
     monkeypatch.setattr("firefly.links.make_copy_of_url", mock_make_copy)
     create_link(**onelink)
 

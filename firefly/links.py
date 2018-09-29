@@ -28,7 +28,7 @@ class LinkForm(FlaskForm):
         validators=[Length(max=50)],
         description="Space separated",
     )
-    make_a_copy = BooleanField("make a copy of the page", default=False)
+    save_a_copy = BooleanField("save a copy of the page", default=False)
 
 
 @bp.route("/create/", methods=["POST", "GET"])
@@ -103,7 +103,7 @@ def create_link(**kwargs):
     kwargs["title"] = title
     result = get_db().links.insert_one(kwargs)
 
-    if kwargs.pop("make_a_copy", False):
+    if kwargs.pop("save_a_copy", False):
         make_copy_of_url(kwargs["url"], result.inserted_id)
 
 
