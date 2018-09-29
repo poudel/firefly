@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, url_for, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, TextAreaField
 from wtforms.fields.html5 import URLField
+from wtforms.widgets import HiddenInput
 from wtforms.validators import URL, Length, Required
 
 from firefly.db import get_db
@@ -24,11 +25,17 @@ class LinkForm(FlaskForm):
     url = URLField("url", validators=[URL(), Length(max=600), Required()])
     description = TextAreaField("description", validators=[Length(max=1000)])
     tags = TagListField(
-        "tags separated by space",
+        "tags",
         validators=[Length(max=50)],
-        description="Space separated",
+        description="Space separated list of tags",
     )
-    save_a_copy = BooleanField("save a copy of the page", default=False)
+    save_a_copy = BooleanField("save page", default=False)
+    close_window = BooleanField(
+        "close on save",
+        default=False,
+        description="try to close the window after saving the bookmark",
+        widget=HiddenInput(),
+    )
 
 
 @bp.route("/create/", methods=["POST", "GET"])
@@ -39,16 +46,26 @@ def links_create():
         title = request.args.get("title")
 
         if url or title:
-            form = LinkForm(data={"url": url, "title": title})
+            initial = {"url": url, "title": title, "close_window": True}
+            form = LinkForm(data=initial)
+            return render_template(
+                "form_popup.html", form=form, page_title=page_title
+            )
         else:
             form = LinkForm()
-        return render_template("form.html", form=form, page_title=page_title)
+            return render_template(
+                "form.html", form=form, page_title=page_title
+            )
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         create_link(**form.data)
-        return redirect(url_for("links.links"))
+
+        if form.data["close_window"]:
+            return render_template("close_window.html")
+        else:
+            return redirect(url_for("links.links"))
     return render_template("form.html", form=form, page_title=page_title), 400
 
 
@@ -94,6 +111,7 @@ def make_copy_of_url(url, link_id):
 
 def create_link(**kwargs):
     kwargs.pop("csrf_token", None)
+    kwargs.pop("close_window", None)
     kwargs["created_at"] = datetime.now()
 
     url = kwargs["url"].lower()

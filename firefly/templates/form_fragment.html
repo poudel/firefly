@@ -1,0 +1,35 @@
+<div class="pa2">
+    {% if page_title %}
+        <h4 class="f4 mt0 mb3">{{ page_title }}</h4>
+    {% endif %}
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+
+        <table>
+            {% for field in form %}
+                {% if field.widget.input_type != "hidden" %}
+                    <tr>
+                        <td>{{ field.label }}</td>
+                        <td>
+                            {{ field() }}
+
+                            <div class="f7">
+                                {{ field.description }}
+                            </div>
+
+                            {% if field.errors %}
+                                <div class="red">
+                                    (Error: {{ field.errors[0] }})
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+        <div class="mt3">
+            <input type="submit" value="save">
+        </div>
+    </form>
+</div>
