@@ -1,4 +1,4 @@
-import urllib
+from urllib import parse
 from datetime import datetime
 import humanize
 from bson.objectid import ObjectId
@@ -82,6 +82,9 @@ def update_link(link, **kwargs):
 
 
 def make_copy_of_url(url, link_id):
+    """
+    Save a url
+    """
     file_id = save_file(url, link_id)
 
     get_db().links.update_one(
@@ -93,12 +96,16 @@ def create_link(**kwargs):
     kwargs.pop("csrf_token", None)
     kwargs["created_at"] = datetime.now()
 
-    title = kwargs.get("title", kwargs["url"])
+    url = kwargs["url"].lower()
+    title = kwargs.get("title", url)
 
     prefs = get_preferences()
     if prefs["prepend_pdf_in_title"]:
-        if kwargs["url"].lower().endswith(".pdf") and "[PDF]" not in title:
+        if url.endswith(".pdf") and "[PDF]" not in title:
             title = f"[PDF] {title}"
+
+    if prefs["remove_ref_query_param"]:
+        kwargs["url"] = remove_ref_query_param(url)
 
     kwargs["title"] = title
     result = get_db().links.insert_one(kwargs)
@@ -107,8 +114,27 @@ def create_link(**kwargs):
         make_copy_of_url(kwargs["url"], result.inserted_id)
 
 
+def remove_ref_query_param(url):
+    parsed = parse.urlparse(url)
+
+    query_params = parse.parse_qs(parsed.query)
+
+    for key in ["ref", "ref_", "_ref"]:
+        query_params.pop(key, None)
+
+    # since parse_qs makes a=b -> {'a': ['b']}, we provide doseq=True
+    # to parse it likewise
+    querystr = parse.urlencode(query_params, doseq=True)
+    new_url = list(parsed)
+    new_url[4] = querystr
+    return parse.urlunparse(new_url)
+
+
 @bp.route("/delete/<id>/", methods=["GET", "POST"])
 def links_delete(id):
+    """
+    View to delete link
+    """
     collection = get_db().links
     link = collection.find_one({"_id": ObjectId(id)})
 
@@ -147,7 +173,7 @@ def links_pre_render(links_queryset):
 
     for link in links_queryset:
         link["naturaltime"] = humanize.naturaltime(link["created_at"])
-        link["domain"] = urllib.parse.urlparse(link["url"]).hostname
+        link["domain"] = parse.urlparse(link["url"]).hostname
         data.append(link)
     return data
 

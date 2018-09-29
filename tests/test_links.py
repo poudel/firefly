@@ -1,3 +1,4 @@
+from urllib import parse
 from datetime import datetime
 import pytest
 from bson.objectid import ObjectId
@@ -9,6 +10,7 @@ from firefly.links import (
     create_link,
     delete_link,
     get_tags,
+    remove_ref_query_param,
 )
 
 
@@ -97,6 +99,20 @@ def test_create_link_puts_url_in_if_title_is_not_provided(app, onelink):
 
     fetched = list(get_db().links.find())[0]
     assert fetched["title"] == onelink["url"]
+
+
+@pytest.mark.parametrize("ref_key", ["ref", "ref_", "_ref"])
+def test_remove_ref_query_param_removes_ref_query_param(ref_key):
+    url = f"https://www.imdb.com/title/tt4378376/?{ref_key}=tt_rec_tt"
+    new_url = remove_ref_query_param(url)
+    assert new_url == "https://www.imdb.com/title/tt4378376/"
+
+
+def test_remove_ref_query_param_retains_other_params():
+    url = "https://hello.com/?ref=asdf&jaja=kaka&nana=mama"
+    new_url = remove_ref_query_param(url)
+    parsed = parse.urlparse(new_url)
+    assert parse.parse_qs(parsed.query) == {"jaja": ["kaka"], "nana": ["mama"]}
 
 
 def test_links_update_get_invalid_url(client):
