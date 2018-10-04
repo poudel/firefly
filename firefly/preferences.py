@@ -55,6 +55,11 @@ class PreferenceForm(FlaskForm):
         "Prepend [PDF] at the beginning of a title if the URL ends with .pdf",
         default=False,
     )
+    redirect_dupe = BooleanField(
+        "While using the bookmarklet, if an existing entry exists, "
+        "redirect to update page for that entry instead of adding a new one. ",
+        default=True,
+    )
 
 
 def get_defaults():

@@ -10,6 +10,7 @@ from firefly.links import (
     delete_link,
     get_tags,
     process_link_form_data,
+    find_by_url,
 )
 
 
@@ -38,6 +39,14 @@ def test_links_create_post_is_creating(client, db, onelink):
 
     fetched = db.links.find_one()
     assert fetched["title"] == "creation"
+
+
+def test_links_create_does_dupe_redirect(client, onelink):
+    create_link(**onelink)
+
+    new_data = {"url": "https://example.com", "title": "Example2"}
+    res = client.post("/links/create/", data=new_data)
+    assert res.status_code == 302
 
 
 def test_create_link(app, db, onelink):
@@ -235,3 +244,13 @@ def test_update_link(db, onelink):
 
     db_link = db.links.find_one(result.inserted_id)
     assert db_link["title"] == "Updated example"
+
+
+def test_find_by_url(db, onelink):
+    create_link(**onelink)
+    link = find_by_url(onelink["url"])
+    assert isinstance(link, dict), "Should return dict if url exists"
+
+    assert (
+        find_by_url("https://ajajja.cooo.coo") is None
+    ), "Should return None if the url doesn't exist"

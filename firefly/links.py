@@ -45,6 +45,11 @@ def links_create():
         url = request.args.get("url")
         title = request.args.get("title")
 
+        if url:
+            dupe = find_by_url(url)
+            if dupe is not None:
+                return redirect(url_for("links.links_update", id=dupe["_id"]))
+
         if url or title:
             initial = {"url": url, "title": title, "close_window": True}
             form = LinkForm(data=initial)
@@ -169,10 +174,10 @@ def delete_link(id):
 
 
 def get_links(tag=None):
+    query = {}
     if tag:
-        query = {"tags": {"$in": [tag]}}
-    else:
-        query = {}
+        query["tags"] = {"$in": [tag]}
+
     return get_db().links.find(query).sort("created_at", -1)
 
 
@@ -188,6 +193,12 @@ def links_pre_render(links_queryset):
 
 def get_tags():
     return get_db().links.distinct("tags")
+
+
+def find_by_url(url):
+    links = get_db().links
+    link = links.find_one({"url": {"$eq": url}})
+    return link
 
 
 @bp.route("/")
