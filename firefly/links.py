@@ -48,7 +48,8 @@ def links_create():
         if url:
             dupe = find_by_url(url)
             if dupe is not None:
-                return redirect(url_for("links.links_update", id=dupe["_id"]))
+                to = url_for("links.links_update", id=dupe["_id"], popup=True)
+                return redirect(to)
 
         if url or title:
             initial = {"url": url, "title": title, "close_window": True}
@@ -86,8 +87,10 @@ def links_update(id):
     page_title = "updating link"
 
     if request.method == "GET":
+        popup = request.args.get("popup")
         form = LinkForm(data=link)
-        return render_template("form.html", form=form, page_title=page_title)
+        template_name = "form_popup.html" if popup == "True" else "form.html"
+        return render_template(template_name, form=form, page_title=page_title)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
