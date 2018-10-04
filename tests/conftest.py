@@ -1,6 +1,7 @@
 # pylint: disable=redefined-outer-name
 import pytest
 from firefly import create_app
+from firefly.db import get_db
 
 
 @pytest.fixture
@@ -18,3 +19,8 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def db(app):
+    return get_db()

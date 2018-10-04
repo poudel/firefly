@@ -8,9 +8,11 @@ from firefly.links import (
     get_links,
     links_pre_render,
     create_link,
+    update_link,
     delete_link,
     get_tags,
     remove_ref_query_param,
+    process_link_form_data,
 )
 
 
@@ -30,21 +32,21 @@ def test_links_create_get(client):
     assert res.status_code == 200
 
 
-def test_links_create_post_is_creating(client, onelink):
+def test_links_create_post_is_creating(client, db, onelink):
     onelink["title"] = "creation"
     onelink["save_a_copy"] = None
 
     res = client.post("/links/create/", data=onelink)
     assert res.status_code == 302
 
-    fetched = list(get_db().links.find())[0]
+    fetched = db.links.find_one()
     assert fetched["title"] == "creation"
 
 
-def test_create_link(app, onelink):
+def test_create_link(app, db, onelink):
     create_link(**onelink)
 
-    fetched = list(get_db().links.find())[0]
+    fetched = db.links.find_one()
     assert "csrf_token" not in fetched, "should exclude csrf_token"
     assert "created_at" in fetched, "should add created_at"
 
@@ -68,7 +70,7 @@ def test_create_link_on_save_a_copy(app, onelink, monkeypatch, mock_make_copy):
     assert mock_make_copy.link_id
 
 
-def test_create_link_puts_pdf_prefix_if_enabled_in_prefs(app, onelink):
+def test_create_link_puts_pdf_prefix_if_enabled_in_prefs(app, db, onelink):
     # this creates a default preferences
     get_preferences()
     update_preferences(prepend_pdf_in_title=True)
@@ -76,12 +78,12 @@ def test_create_link_puts_pdf_prefix_if_enabled_in_prefs(app, onelink):
     onelink["url"] = "https://example.com/sample.pdf"
     create_link(**onelink)
 
-    fetched = list(get_db().links.find())[0]
+    fetched = db.links.find_one()
     assert fetched["title"].startswith("[PDF] ")
     assert fetched["title"] == "[PDF] " + onelink["title"]
 
 
-def test_create_link_doesnt_put_pdf_prefix_if_disabled_in_prefs(app, onelink):
+def test_create_link_doesnt_put_pdf_prefix_if_disabled_in_prefs(db, onelink):
     # this creates a default preferences
     get_preferences()
     update_preferences(prepend_pdf_in_title=False)
@@ -89,15 +91,15 @@ def test_create_link_doesnt_put_pdf_prefix_if_disabled_in_prefs(app, onelink):
     onelink["url"] = "https://example.com/sample.pdf"
     create_link(**onelink)
 
-    fetched = list(get_db().links.find())[0]
+    fetched = db.links.find_one()
     assert not fetched["title"].startswith("[PDF] ")
 
 
-def test_create_link_puts_url_in_if_title_is_not_provided(app, onelink):
+def test_create_link_puts_url_in_if_title_is_not_provided(db, onelink):
     onelink.pop("title")
-    create_link(**onelink)
+    result = create_link(**onelink)
 
-    fetched = list(get_db().links.find())[0]
+    fetched = db.links.find_one(result.inserted_id)
     assert fetched["title"] == onelink["url"]
 
 
@@ -129,7 +131,7 @@ def test_links_update_get_valid_url(client, onelink):
     assert res.status_code == 200
 
 
-def test_links_update_post(client, onelink):
+def test_links_update_post(client, db, onelink):
     id = ObjectId("5b92b2cd5e378f694898087d")
     create_link(_id=ObjectId(id), **onelink)
 
@@ -137,7 +139,7 @@ def test_links_update_post(client, onelink):
     res = client.post(f"/links/update/{id}/", data=onelink)
     assert res.status_code == 302
 
-    fetched = get_db().links.find_one({"_id": id})
+    fetched = db.links.find_one({"_id": id})
     assert fetched["url"] == "https://google.com/asdf/"
 
 
@@ -163,18 +165,18 @@ def test_links_delete_get_with_valid_id(client, onelink):
     assert res.status_code == 200
 
 
-def test_links_delete_post(client, onelink):
+def test_links_delete_post(client, db, onelink):
     id = ObjectId("5b92b2cd5e378f694898087a")
     create_link(_id=ObjectId(id), **onelink)
 
     res = client.post(f"/links/delete/{id}/")
     assert res.status_code == 302
-    assert not get_db().links.find_one({"_id": id})
+    assert not db.links.find_one({"_id": id})
 
 
 @pytest.fixture
-def save_links(app):
-    links = get_db().links
+def save_links(db):
+    links = db.links
     links.insert_many(
         [
             {
@@ -229,3 +231,24 @@ def test_get_tags(app, save_links):
 def test_links_view(client):
     res = client.get("/links/")
     assert res.status_code == 200
+
+
+def test_process_link_form_data():
+    form_data = {"title": "Hello", "csrf_token": "asfddf", "close_window": True}
+    processed_data = process_link_form_data(form_data)
+    assert "csrf_token" not in processed_data
+    assert "close_window" not in processed_data
+
+
+def test_update_link(db, onelink):
+    result = create_link(**onelink)
+
+    link = db.links.find_one(result.inserted_id)
+
+    return_link = update_link(link, title="Updated example")
+    assert isinstance(return_link, dict)
+    assert link["_id"] == return_link["_id"]
+    assert link["title"] == "Updated example"
+
+    db_link = db.links.find_one(result.inserted_id)
+    assert db_link["title"] == "Updated example"

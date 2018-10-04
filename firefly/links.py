@@ -60,7 +60,8 @@ def links_create():
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
-        create_link(**form.data)
+        data = process_link_form_data(form.data)
+        create_link(**data)
 
         if form.data["close_window"]:
             return render_template("close_window.html")
@@ -86,13 +87,22 @@ def links_update(id):
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
-        update_link(link, **form.data)
+        data = process_link_form_data(form.data)
+        update_link(link, **data)
         return redirect(url_for("links.links"))
     return render_template("form.html", form=form, page_title=page_title), 400
 
 
+def process_link_form_data(data):
+    """
+    Remove unwanted fields from the forms
+    """
+    data.pop("csrf_token", None)
+    data.pop("close_window", None)
+    return data
+
+
 def update_link(link, **kwargs):
-    kwargs.pop("csrf_token", None)
     link.update(kwargs)
     get_db().links.replace_one({"_id": link["_id"]}, link)
     return link
@@ -110,12 +120,11 @@ def make_copy_of_url(url, link_id):
 
 
 def create_link(**kwargs):
-    kwargs.pop("csrf_token", None)
-    kwargs.pop("close_window", None)
+
     kwargs["created_at"] = datetime.now()
 
-    url = kwargs["url"].lower()
-    title = kwargs.get("title", url)
+    url = kwargs["url"]
+    title = kwargs.get("title", "") or url
 
     prefs = get_preferences()
     if prefs["prepend_pdf_in_title"]:
@@ -130,6 +139,7 @@ def create_link(**kwargs):
 
     if kwargs.pop("save_a_copy", False):
         make_copy_of_url(kwargs["url"], result.inserted_id)
+    return result
 
 
 def remove_ref_query_param(url):
