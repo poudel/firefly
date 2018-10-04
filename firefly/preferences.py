@@ -51,9 +51,6 @@ class PreferenceForm(FlaskForm):
     enable_notes = BooleanField(
         "Enable notes feature: save simple text notes.", default=True
     )
-    remove_ref_query_param = BooleanField(
-        "Remove 'ref' query parameter from links being bookmarked", default=True
-    )
     prepend_pdf_in_title = BooleanField(
         "Prepend [PDF] at the beginning of a title if the URL ends with .pdf",
         default=False,

@@ -120,7 +120,6 @@ def make_copy_of_url(url, link_id):
 
 
 def create_link(**kwargs):
-
     kwargs["created_at"] = datetime.now()
 
     url = kwargs["url"]
@@ -131,31 +130,12 @@ def create_link(**kwargs):
         if url.endswith(".pdf") and "[PDF]" not in title:
             title = f"[PDF] {title}"
 
-    if prefs["remove_ref_query_param"]:
-        kwargs["url"] = remove_ref_query_param(url)
-
     kwargs["title"] = title
     result = get_db().links.insert_one(kwargs)
 
     if kwargs.pop("save_a_copy", False):
         make_copy_of_url(kwargs["url"], result.inserted_id)
     return result
-
-
-def remove_ref_query_param(url):
-    parsed = parse.urlparse(url)
-
-    query_params = parse.parse_qs(parsed.query)
-
-    for key in ["ref", "ref_", "_ref"]:
-        query_params.pop(key, None)
-
-    # since parse_qs makes a=b -> {'a': ['b']}, we provide doseq=True
-    # to parse it likewise
-    querystr = parse.urlencode(query_params, doseq=True)
-    new_url = list(parsed)
-    new_url[4] = querystr
-    return parse.urlunparse(new_url)
 
 
 @bp.route("/delete/<id>/", methods=["GET", "POST"])
