@@ -226,10 +226,10 @@ def test_links_view(client):
 
 
 def test_process_link_form_data():
-    form_data = {"title": "Hello", "csrf_token": "asfddf", "close_window": True}
+    form_data = {"title": "Hello", "csrf_token": "asfddf", "is_popup": True}
     processed_data = process_link_form_data(form_data)
     assert "csrf_token" not in processed_data
-    assert "close_window" not in processed_data
+    assert "is_popup" not in processed_data
 
 
 def test_update_link(db, onelink):

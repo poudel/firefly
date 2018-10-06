@@ -30,50 +30,60 @@ class LinkForm(FlaskForm):
         description="Space separated list of tags",
     )
     save_a_copy = BooleanField("save page", default=False)
-    close_window = BooleanField(
-        "close on save",
-        default=False,
-        description="try to close the window after saving the bookmark",
-        widget=HiddenInput(),
-    )
+    read_later = BooleanField("read later", default=False)
+    is_popup = BooleanField(default=False, widget=HiddenInput())
+
+
+
+def render_links_create_form(url, title, is_popup):
+    """
+    render links create form
+    """
+    page_title = "adding link"
+    if url:
+        dupe = find_by_url(url)
+        if dupe is not None:
+            to = url_for(
+                "links.links_update",
+                id=dupe["_id"],
+                is_popup="y" if is_popup else "n",
+            )
+            return redirect(to)
+
+    if is_popup:
+        initial = {"url": url, "title": title, "is_popup": True}
+        template = "form_popup.html"
+    else:
+        template = "form.html"
+        initial = {}
+    form = LinkForm(data=initial)
+    return render_template(template, form=form, page_title=page_title)
 
 
 @bp.route("/create/", methods=["POST", "GET"])
 def links_create():
     page_title = "adding link"
+    is_popup = request.values.get("is_popup") == "y"
+
     if request.method == "GET":
         url = request.args.get("url")
         title = request.args.get("title")
-
-        if url:
-            dupe = find_by_url(url)
-            if dupe is not None:
-                to = url_for("links.links_update", id=dupe["_id"], popup=True)
-                return redirect(to)
-
-        if url or title:
-            initial = {"url": url, "title": title, "close_window": True}
-            form = LinkForm(data=initial)
-            return render_template(
-                "form_popup.html", form=form, page_title=page_title
-            )
-        else:
-            form = LinkForm()
-            return render_template(
-                "form.html", form=form, page_title=page_title
-            )
+        is_popup = url or title
+        return render_links_create_form(url, title, is_popup)
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         data = process_link_form_data(form.data)
         create_link(**data)
+        is_popup = form.data.get("is_popup")
 
-        if form.data["close_window"]:
+        if is_popup:
             return render_template("close_window.html")
         else:
             return redirect(url_for("links.links"))
-    return render_template("form.html", form=form, page_title=page_title), 400
+    template = "form_popup.html" if is_popup else "form.html"
+    return render_template(template, form=form, page_title=page_title), 400
 
 
 @bp.route("/update/<id>/", methods=["POST", "GET"])
@@ -87,9 +97,9 @@ def links_update(id):
     page_title = "updating link"
 
     if request.method == "GET":
-        popup = request.args.get("popup")
+        is_popup = request.args.get("is_popup") is not None
         form = LinkForm(data=link)
-        template_name = "form_popup.html" if popup == "True" else "form.html"
+        template_name = "form_popup.html" if is_popup else "form.html"
         return render_template(template_name, form=form, page_title=page_title)
 
     # disable csrf for now, to make it easy to test this URL
@@ -106,7 +116,7 @@ def process_link_form_data(data):
     Remove unwanted fields from the forms
     """
     data.pop("csrf_token", None)
-    data.pop("close_window", None)
+    data.pop("is_popup", None)
     return data
 
 

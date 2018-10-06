@@ -8,7 +8,7 @@
             {{ form.hidden_tag() }}
 
             {% for field in form %}
-                {% if field.type != "CSRFTokenField" %}
+                {% if field.widget.input_type != "hidden" %}
                     <div class="mb3">
                         {{ field }}
                         {{ field.label }}
@@ -18,9 +18,7 @@
                                 (Error: {{ field.errors[0] }})
                             </span>
                         {% endif %}
-
                     </div>
-
                 {% endif %}
             {% endfor %}
 

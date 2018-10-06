@@ -9,9 +9,14 @@
             {% for field in form %}
                 {% if field.widget.input_type != "hidden" %}
                     <tr>
-                        <td>{{ field.label }}</td>
-                        <td>
-                            {{ field(style="width: 200%;") }}
+                        <td>{% if field.widget.input_type != "checkbox" %}{{ field.label }}{% endif %}</td>
+                        <td class="tl">
+                            {% if field.widget.input_type == "checkbox" %}
+                                {{ field }}
+                                {{ field.label }}
+                            {% else %}
+                                {{ field(style="width: 200%") }}
+                            {% endif %}
 
                             <div class="f7">
                                 {{ field.description }}
