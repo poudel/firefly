@@ -1,25 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <div class="pv2">
         <h4 class="f4 mt0 mb1">Bookmarklet</h4>
-
         <div class="mt3">This bookmarklet can be used to quickly create bookmark from
             the page you're visiting.
-
         </div>
-
         <div class="mt3">
             {# shamefully copied from: https://github.com/jonschoning/espial/blob/master/templates/user-settings.hamlet #}
-            <a class="link blue pa1 ba b--dashed mt2" href="javascript:q=location.href;if(document.getSelection){d=document.getSelection();}else{d='';};p=document.title;void(open('{{ create_url}}?url='+encodeURIComponent(q)+'&description='+encodeURIComponent(d)+'&title='+encodeURIComponent(p),'firefly','toolbar=no,width=700,height=350'));">
+            <a class="link blue pa1 ba b--dashed mt2" href="javascript:q=location.href;if(document.getSelection){d=document.getSelection();}else{d='';};p=document.title;void(open('{{ create_url}}?is_popup=y&url='+encodeURIComponent(q)+'&description='+encodeURIComponent(d)+'&title='+encodeURIComponent(p),'firefly','toolbar=no,width=700,height=350'));">
                 Bookmark me
             </a>
         </div>
-
         <div class="mt3">
-            Please drag and drop the button above on your browser's bookmarks bar.
+            Please drag and drop the button on your browser's bookmarks bar.
         </div>
     </div>
-
 {% endblock %}

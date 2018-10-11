@@ -21,6 +21,10 @@ bp = Blueprint("links", __name__, url_prefix="/links")
 
 
 class LinkForm(FlaskForm):
+    """
+    Link create and update form.
+    """
+
     title = StringField("title", validators=[Length(max=300)])
     url = URLField("url", validators=[URL(), Length(max=600), Required()])
     description = TextAreaField("description", validators=[Length(max=1000)])
@@ -37,7 +41,23 @@ class LinkForm(FlaskForm):
 
 def render_links_create_form(url, title, is_popup):
     """
-    render links create form
+    This function renders link create form. This function is called
+    from `links_create` function on a GET request. This method is
+    split from the `links_create` function because it got a little big
+    and for better testability.
+
+    The arguments `url` and `title` are the initial data, they are
+    there to auto-fill the respective fields when the form renders.
+    This is how the JS bookmarklet works.
+
+    The `url` argument in particular also has another use. That is, if
+    a `url` already has an entry in our database, instead of rendering
+    the create form, we redirect to the update page for the existing
+    entry.
+
+    The `is_popup` argument determines which template to render, the
+    full site template or just the form fragment. When we're using the
+    bookmarklet, we just want the link create form to render.
     """
     page_title = "adding link"
     if url:
@@ -50,8 +70,8 @@ def render_links_create_form(url, title, is_popup):
             )
             return redirect(to)
 
+    initial = {"url": url, "title": title, "is_popup": is_popup}
     if is_popup:
-        initial = {"url": url, "title": title, "is_popup": True}
         template = "form_popup.html"
     else:
         template = "form.html"
@@ -62,13 +82,15 @@ def render_links_create_form(url, title, is_popup):
 
 @bp.route("/create/", methods=["POST", "GET"])
 def links_create():
+    """
+    This view function handles creation of a link.
+    """
     page_title = "adding link"
     is_popup = request.values.get("is_popup") == "y"
 
     if request.method == "GET":
         url = request.args.get("url")
         title = request.args.get("title")
-        is_popup = url or title
         return render_links_create_form(url, title, is_popup)
 
     # disable csrf for now, to make it easy to test this URL
@@ -209,6 +231,11 @@ def get_tags():
 
 
 def find_by_url(url):
+    """
+    Take a URL and try to return an entry for that url if it exists.
+    Returns None if not found. This method is used to find existing
+    entry while creating a bookmark to avoid duplicacy.
+    """
     links = get_db().links
     link = links.find_one({"url": {"$eq": url}})
     return link
