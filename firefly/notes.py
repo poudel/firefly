@@ -20,11 +20,7 @@ bp = Blueprint("notes", __name__, url_prefix="/notes")
 
 class NoteForm(FlaskForm):
     title = StringField("title", validators=[Length(max=200)])
-    tags = TagListField(
-        "tags separated by space",
-        validators=[Length(max=50)],
-        description="Space separated",
-    )
+    tags = TagListField("tags", validators=[Length(max=50)])
     description = TextAreaField("content", validators=[Required()])
 
 

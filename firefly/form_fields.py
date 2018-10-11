@@ -10,11 +10,21 @@ class TagListField(Field):
     widget = TextInput()
 
     def __init__(
-        self, label="", validators=None, remove_duplicates=True, delimiter=" ", **kwargs
+        self,
+        label="",
+        validators=None,
+        remove_duplicates=True,
+        delimiter=" ",
+        **kwargs
     ):
         super().__init__(label, validators, **kwargs)
         self.remove_duplicates = remove_duplicates
         self.delimiter = delimiter
+        if "description" not in kwargs:
+            if delimiter == " ":
+                self.description = "Space separated list of tags"
+            elif delimiter == ",":
+                self.description = "Comma separated list of tags"
 
     def _value(self):
         if self.data:
@@ -25,7 +35,9 @@ class TagListField(Field):
     def process_formdata(self, valuelist):
         if valuelist:
             self.data = [
-                x.strip() for x in valuelist[0].split(self.delimiter) if bool(x.strip())
+                x.strip()
+                for x in valuelist[0].split(self.delimiter)
+                if bool(x.strip())
             ]
         else:
             self.data = []

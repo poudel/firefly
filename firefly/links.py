@@ -28,11 +28,7 @@ class LinkForm(FlaskForm):
     title = StringField("title", validators=[Length(max=300)])
     url = URLField("url", validators=[URL(), Length(max=600), Required()])
     description = TextAreaField("description", validators=[Length(max=1000)])
-    tags = TagListField(
-        "tags",
-        validators=[Length(max=50)],
-        description="Space separated list of tags",
-    )
+    tags = TagListField("tags", validators=[Length(max=50)])
     save_a_copy = BooleanField("save page", default=False)
     read_later = BooleanField("read later", default=False)
     is_popup = BooleanField(default=False, widget=HiddenInput())
