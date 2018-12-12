@@ -44,7 +44,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <input type="submit" value="save">                    
+                    <input type="submit" value="{% if is_update %}update{% else %}save{% endif %}">
                 </td>
             </tr>
         </table>

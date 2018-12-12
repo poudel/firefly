@@ -34,6 +34,11 @@ class LinkForm(FlaskForm):
     is_popup = BooleanField(default=False, widget=HiddenInput())
 
 
+class LinkFilterForm(FlaskForm):
+    tag = StringField()
+    domain = URLField()
+    read_later = BooleanField()
+
 
 def render_links_create_form(url, title, is_popup):
     """
@@ -118,15 +123,27 @@ def links_update(id):
         is_popup = request.args.get("is_popup") is not None
         form = LinkForm(data=link)
         template_name = "form_popup.html" if is_popup else "form.html"
-        return render_template(template_name, form=form, page_title=page_title)
+        return render_template(
+            template_name, form=form, page_title=page_title, is_update=True
+        )
 
     # disable csrf for now, to make it easy to test this URL
     form = LinkForm(request.form, meta={"csrf": False})
     if form.validate_on_submit():
         data = process_link_form_data(form.data)
         update_link(link, **data)
-        return redirect(url_for("links.links"))
-    return render_template("form.html", form=form, page_title=page_title), 400
+        is_popup = form.data.get("is_popup")
+
+        if is_popup:
+            return render_template("close_window.html")
+        else:
+            return redirect(url_for("links.links"))
+    return (
+        render_template(
+            "form.html", form=form, page_title=page_title, is_update=True
+        ),
+        400,
+    )
 
 
 def process_link_form_data(data):
